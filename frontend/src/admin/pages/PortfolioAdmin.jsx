@@ -10,6 +10,13 @@ export default function ProjectAdmin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Validation: Ensure a category is selected
+        if (!projectCategory) {
+            alert("Please select a project category.");
+            return;
+        }
+
         console.log({
             headingName,
             textName,
@@ -19,6 +26,8 @@ export default function ProjectAdmin() {
             projectStack,
         });
         alert("Form submitted successfully!");
+
+        // Reset all fields
         setHeadingName("");
         setTextName("");
         setProjectCategory("");
@@ -26,6 +35,16 @@ export default function ProjectAdmin() {
         setProjectDescription("");
         setProjectStack("");
     };
+
+    const categories = [
+        "All Projects",
+        "Web Development",
+        "Digital Marketing",
+        "Branding",
+        "Video",
+        "Social Media",
+        "Content Creation",
+    ];
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-start justify-center p-4 sm:p-6 lg:p-10">
@@ -71,18 +90,24 @@ export default function ProjectAdmin() {
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
                     <h1 className="text-xl sm:text-2xl font-semibold mb-4">Project Details Section</h1>
 
+                    {/* Project Category Radio Buttons */}
                     <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Project Category Name
-                        </label>
-                        <input
-                            type="text"
-                            value={projectCategory}
-                            onChange={(e) => setProjectCategory(e.target.value)}
-                            placeholder="Enter project category"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
+                        <label className="block text-gray-700 font-semibold mb-2">Project Category Name</label>
+                        <div className="flex flex-wrap gap-4 mb-4">
+                            {categories.map((category) => (
+                                <label key={category} className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        name="projectCategory"
+                                        value={category}
+                                        checked={projectCategory === category}
+                                        onChange={(e) => setProjectCategory(e.target.value)}
+                                        className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-400"
+                                    />
+                                    <span className="text-gray-700">{category}</span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                     <div>

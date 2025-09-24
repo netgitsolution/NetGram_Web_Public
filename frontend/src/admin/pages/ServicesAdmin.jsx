@@ -8,17 +8,23 @@ export default function ServiceAdmin() {
         description: "",
         section: "",
     });
+    const [flexibleData, setFlexibleData] = useState({
+        heading: "",
+        text: "",
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Service Heading:", { headingName, textName });
         console.log("Card Data:", cardData);
+        console.log("Flexible Section Data:", flexibleData);
         alert("Form submitted successfully!");
 
         // Reset fields
         setHeadingName("");
         setTextName("");
         setCardData({ name: "", description: "", section: "" });
+        setFlexibleData({ heading: "", text: "" });
     };
 
     return (
@@ -109,6 +115,43 @@ export default function ServiceAdmin() {
                             }
                             placeholder="Enter Service Section"
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required
+                        />
+                    </div>
+                </div>
+
+                {/* Section 3: Flexible Section */}
+                <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Flexible Section</h1>
+
+                    <div>
+                        <label className="block text-gray-700 font-semibold mb-1">
+                            Flexible Heading
+                        </label>
+                        <input
+                            type="text"
+                            value={flexibleData.heading}
+                            onChange={(e) =>
+                                setFlexibleData({ ...flexibleData, heading: e.target.value })
+                            }
+                            placeholder="Enter Flexible Heading"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-gray-700 font-semibold mb-1">
+                            Flexible Text
+                        </label>
+                        <textarea
+                            value={flexibleData.text}
+                            onChange={(e) =>
+                                setFlexibleData({ ...flexibleData, text: e.target.value })
+                            }
+                            placeholder="Enter Flexible Text"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            rows={3}
                             required
                         />
                     </div>

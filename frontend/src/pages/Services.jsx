@@ -117,12 +117,12 @@ const ServicesPage = () => {
                                 <li key={index}>{point}</li>
                             ))}
                         </ul>
-                        <button
+                        {/* <button
                             className="px-6 py-2 border border-emerald-400 text-emerald-400 rounded-lg font-medium hover:bg-emerald-500 hover:text-white transition"
                             onClick={() => navigate("/contact")}
                         >
                             Contact Us
-                        </button>
+                        </button> */}
                     </div>
                 ))}
             </section>

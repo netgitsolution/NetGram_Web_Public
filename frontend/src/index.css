@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+.headingn {
+    font-style: inherit;
+}
+
+.itname {
+    font-style: inherit;
+    margin-left: 10px;
+}
+
+.contactus {
+    border-bottom-right-radius: 35%;
+    border-top-left-radius: 35%;
+    transition: all 0.3s ease;
+    /* Smooth transition */
+}
+
+.contactus:hover {
+    border-bottom-left-radius: 35%;
+    /* bottom-right → bottom-left */
+    border-top-right-radius: 35%;
+    /* top-left → top-right */
+    border-bottom-right-radius: 0;
+    /* remove old */
+    border-top-left-radius: 0;
+    /* remove old */
+}

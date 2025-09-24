@@ -1,0 +1,25 @@
+{
+  "name": "offical",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run server --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohammadYunus70/NetGaram_Offical_Web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MohammadYunus70/NetGaram_Offical_Web/issues"
+  },
+  "homepage": "https://github.com/MohammadYunus70/NetGaram_Offical_Web#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

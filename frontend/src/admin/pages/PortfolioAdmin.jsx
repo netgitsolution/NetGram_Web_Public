@@ -8,10 +8,22 @@ export default function ProjectAdmin() {
     const [projectDescription, setProjectDescription] = useState("");
     const [projectStack, setProjectStack] = useState("");
 
+    // Categories state (dynamic)
+    const [categories, setCategories] = useState([
+        "All Projects",
+        "Web Development",
+        "Digital Marketing",
+        "Branding",
+        "Video",
+        "Social Media",
+        "Content Creation",
+    ]);
+
+    const [newCategory, setNewCategory] = useState("");
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validation: Ensure a category is selected
         if (!projectCategory) {
             alert("Please select a project category.");
             return;
@@ -27,7 +39,6 @@ export default function ProjectAdmin() {
         });
         alert("Form submitted successfully!");
 
-        // Reset all fields
         setHeadingName("");
         setTextName("");
         setProjectCategory("");
@@ -36,15 +47,27 @@ export default function ProjectAdmin() {
         setProjectStack("");
     };
 
-    const categories = [
-        "All Projects",
-        "Web Development",
-        "Digital Marketing",
-        "Branding",
-        "Video",
-        "Social Media",
-        "Content Creation",
-    ];
+    // Add Category
+    const handleAddCategory = () => {
+        if (newCategory.trim() === "") {
+            alert("Category name cannot be empty.");
+            return;
+        }
+        if (categories.includes(newCategory)) {
+            alert("Category already exists.");
+            return;
+        }
+        setCategories([...categories, newCategory]);
+        setNewCategory("");
+    };
+
+    // Delete Category
+    const handleDeleteCategory = (category) => {
+        setCategories(categories.filter((c) => c !== category));
+        if (projectCategory === category) {
+            setProjectCategory(""); // reset selected category if deleted
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-start justify-center p-4 sm:p-6 lg:p-10">
@@ -90,12 +113,12 @@ export default function ProjectAdmin() {
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
                     <h1 className="text-xl sm:text-2xl font-semibold mb-4">Project Details Section</h1>
 
-                    {/* Project Category Radio Buttons */}
+                    {/* Dynamic Project Category */}
                     <div>
                         <label className="block text-gray-700 font-semibold mb-2">Project Category Name</label>
                         <div className="flex flex-wrap gap-4 mb-4">
                             {categories.map((category) => (
-                                <label key={category} className="flex items-center gap-2">
+                                <label key={category} className="flex items-center gap-2 border px-3 py-1 rounded-lg bg-gray-50">
                                     <input
                                         type="radio"
                                         name="projectCategory"
@@ -105,8 +128,33 @@ export default function ProjectAdmin() {
                                         className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-400"
                                     />
                                     <span className="text-gray-700">{category}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDeleteCategory(category)}
+                                        className="text-red-500 text-sm hover:underline ml-2"
+                                    >
+                                        ✕
+                                    </button>
                                 </label>
                             ))}
+                        </div>
+
+                        {/* Add New Category */}
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                                placeholder="New category name"
+                                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                                type="button"
+                                onClick={handleAddCategory}
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                            >
+                                Add
+                            </button>
                         </div>
                     </div>
 

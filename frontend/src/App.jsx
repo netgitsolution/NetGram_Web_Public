@@ -1,31 +1,40 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+// App.jsx
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+
+// Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 
+// Public Pages
 import HomePage from "./pages/Home";
 import PortfolioPage from "./pages/PortfolioPage";
 import ServicesPage from "./pages/Services";
 import AboutPage from "./pages/About";
 import Career from "./pages/Career";
 
+// Admin Pages
 import AdminLayout from "./admin/AdminLayout";
+import LoginAdmin from "./admin/pages/LoginAdmin";
 
-const AppWrapper = () => {
+// 🔹 Wrapper for Navbar & Footer Visibility
+const AppWrapper = ({ isLoggedIn, handleLogin, handleLogout }) => {
   const location = useLocation();
 
-  // Pages jaha navbar nahi chahiye
-  const hideNavbarPaths = ["/adminLayout"];
+  // Pages jaha Navbar/Footer nahi dikhna
+  const hidePaths = ["/adminLayout", "/adminLogin"];
 
-  const isNavbarVisible = !hideNavbarPaths.some((path) =>
+  const isNavbarVisible = !hidePaths.some((path) =>
     location.pathname.startsWith(path)
   );
-
-  // Pages jaha footer nahi chahiye
-  const hideFooterPaths = ["/adminLayout"];
-
-  const isFooterVisible = !hideFooterPaths.some((path) =>
+  const isFooterVisible = !hidePaths.some((path) =>
     location.pathname.startsWith(path)
   );
 
@@ -34,14 +43,37 @@ const AppWrapper = () => {
       {isNavbarVisible && <Navbar />}
 
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/careers" element={<Career />} />
-        <Route path="/adminLayout" element={<AdminLayout />} />
-        {/* 404 Page Not Found */}
-        <Route path="*" element={<div className="text-center py-16 text-2xl">404 - Page Not Found</div>} />
+
+        {/* Admin Login */}
+        <Route path="/adminLogin" element={<LoginAdmin onLogin={handleLogin} />} />
+
+        {/* Protected Admin Dashboard */}
+        <Route
+          path="/adminLayout"
+          element={
+            isLoggedIn ? (
+              <AdminLayout onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/adminLogin" replace />
+            )
+          }
+        />
+
+        {/* 404 Page */}
+        <Route
+          path="*"
+          element={
+            <div className="text-center py-16 text-2xl font-semibold text-gray-700">
+              404 - Page Not Found
+            </div>
+          }
+        />
       </Routes>
 
       {isFooterVisible && <Footer />}
@@ -49,11 +81,32 @@ const AppWrapper = () => {
   );
 };
 
+// 🔹 Main App Component
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Fake Login Validation
+  const handleLogin = (username, password) => {
+    if (username === "admin" && password === "1234") {
+      setIsLoggedIn(true);
+    } else {
+      alert("❌ Invalid credentials");
+    }
+  };
+
+  // Logout
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
     <Router>
       <ScrollToTop />
-      <AppWrapper />
+      <AppWrapper
+        isLoggedIn={isLoggedIn}
+        handleLogin={handleLogin}
+        handleLogout={handleLogout}
+      />
     </Router>
   );
 }

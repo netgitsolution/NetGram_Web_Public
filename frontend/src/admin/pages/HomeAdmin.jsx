@@ -31,8 +31,16 @@ export default function HomeAdmin() {
     // Client handlers
     const addClientCard = () =>
         setClients([...clients, { clientName: "", feedback: "", companyName: "" }]);
-    const removeClientCard = (index) =>
-        setClients(clients.filter((_, i) => i !== index));
+
+    const removeClientCard = (index) => {
+        const newClients = clients.filter((_, i) => i !== index);
+        setClients(
+            newClients.length
+                ? newClients
+                : [{ clientName: "", feedback: "", companyName: "" }]
+        );
+    };
+
     const handleClientChange = (index, field, value) => {
         const newClients = [...clients];
         newClients[index][field] = value;

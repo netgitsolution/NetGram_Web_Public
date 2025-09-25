@@ -20,7 +20,7 @@ import AboutUsAdmin from "./pages/AboutUsAdmin";
 import NavbarAdmin from "./pages/NavbarAdmin";
 import FooterAdmin from "./pages/FooterAdmin";
 
-export default function AdminLayout() {
+export default function AdminLayout({ onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("Home");
@@ -79,8 +79,10 @@ export default function AdminLayout() {
         {/* Logout */}
         <div className="p-4 border-t border-gray-700">
           <button
-            className={`flex items-center gap-2 w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all ${!sidebarOpen && "justify-center"
-              }`}
+            onClick={onLogout}
+            className={`flex items-center gap-2 w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all ${
+              !sidebarOpen && "justify-center"
+            }`}
           >
             <LogOut size={20} />
             {sidebarOpen && <span>Logout</span>}
@@ -114,7 +116,10 @@ export default function AdminLayout() {
               ))}
             </nav>
             <div className="p-4 border-t border-gray-700">
-              <button className="flex items-center gap-2 w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all">
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-2 w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all"
+              >
                 <LogOut size={20} />
                 <span>Logout</span>
               </button>
@@ -133,7 +138,7 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
         <header className="w-full bg-white shadow p-4 flex items-center md:hidden fixed top-0 left-0 right-0 z-40">
-          {/* Sidebar Toggle Button (Left side) */}
+          {/* Sidebar Toggle Button */}
           <button
             className="p-2 hover:bg-gray-200 rounded-md"
             onClick={() => setMobileSidebarOpen(true)}
@@ -141,7 +146,7 @@ export default function AdminLayout() {
             <Menu size={20} />
           </button>
 
-          {/* Dashboard Title (Center me) */}
+          {/* Dashboard Title */}
           <h1 className="absolute left-1/2 -translate-x-1/2 text-lg font-semibold">
             Dashboard
           </h1>
@@ -165,10 +170,9 @@ export default function AdminLayout() {
 // Sidebar Button Component
 const SidebarButton = ({ icon, label, sidebarOpen, active, onClick }) => (
   <button
-    className={`flex items-center gap-3 w-full p-2 rounded-lg transition-all ${active
-      ? "bg-blue-600 hover:bg-blue-500"
-      : "hover:bg-gray-700"
-      } ${!sidebarOpen && "justify-center"}`}
+    className={`flex items-center gap-3 w-full p-2 rounded-lg transition-all ${
+      active ? "bg-blue-600 hover:bg-blue-500" : "hover:bg-gray-700"
+    } ${!sidebarOpen && "justify-center"}`}
     onClick={onClick}
   >
     {icon}

@@ -28,7 +28,7 @@ export const Service = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        service_text: {
+        flexible_text: {
             type: DataTypes.TEXT,
             allowNull: false,
         }

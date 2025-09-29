@@ -4,14 +4,14 @@ import { sequelize } from '../config/db.config.js';
 export const HomeRequest = sequelize.define(
     'HomeRequest',
     {
-        service: {
+        service_heading: {
             type: DataTypes.ARRAY(DataTypes.STRING) // Array of strings
         },
-        heading: {
+        hero_heading: {
             type: DataTypes.STRING,
             unique: true // Make heading unique so upsert works
         },
-        description: {
+        hero_text: {
             type: DataTypes.STRING
         },
         client: {

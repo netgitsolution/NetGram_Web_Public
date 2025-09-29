@@ -1,36 +1,36 @@
-import { Home } from '../models/home.model.js';
+import { HomeRequest } from '../models/home.model.js';
 
-export const createOrUpdateHomeRequest = async (req, res) => {
+export const updateHomeRequest = async (req, res) => {
     try {
-        const { service, heading, description, client } = req.body;
+        const { id, service_heading, hero_heading, hero_text, client } = req.body;
 
-        // Validation
-        if (!heading || !description) {
-            return res.status(400).json({ message: "Heading and Description required!" });
+        if (!id) {
+            return res.status(400).json({ message: "id is required!" });
         }
 
-        // Upsert (create or update)
-        const [homeRequest, created] = await Home.upsert(
-            {
-                heading,
-                service,
-                description,
-                client
-            },
-            {
-                returning: true // returns the affected row(s)
-            }
+        // Check if the record exists
+        const existingHome = await HomeRequest.findByPk(id);
+
+        if (!existingHome) {
+            return res.status(404).json({ message: "No matching Home Request found to update." });
+        }
+
+        // Update the record
+        await HomeRequest.update(
+            { service_heading, hero_heading, hero_text, client },
+            { where: { id } }
         );
 
-        return res.status(created ? 201 : 200).json({
-            message: created
-                ? "Home request created successfully!"
-                : "Home request updated successfully!",
-            data: homeRequest
+        // Fetch updated record
+        const updatedHome = await HomeRequest.findByPk(id);
+
+        return res.status(200).json({
+            message: "Home request updated successfully!",
+            data: updatedHome
         });
 
     } catch (error) {
-        console.error("Error creating/updating Home Request:", error);
+        console.error("Error updating Home Request:", error);
         return res.status(500).json({
             message: "Something went wrong!",
             error: error.message

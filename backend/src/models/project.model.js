@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.config.js';
 
-export const ProjectRequest = sequelize.define(
+export const Project = sequelize.define(
     'ProjectRequest',
     {
         full_name: {

@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.config.js';
 
-export const ServiceRequest = sequelize.define(
+export const Service = sequelize.define(
     'ServiceRequest',
     {
         heading: {

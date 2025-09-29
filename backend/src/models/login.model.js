@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.config";
 
 export const Login = sequelize.define(
-    "Login",
+    "LoginRequest",
     {
         email: {
             type: DataTypes.STRING

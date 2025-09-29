@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from '../config/db.config.js';
 
 export const Footer = sequelize.define(
-    'Footer',
+    'FooterRequest',
     {
         heading: {
             type: DataTypes.STRING,

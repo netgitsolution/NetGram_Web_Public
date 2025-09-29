@@ -1,8 +1,8 @@
 import { DataType, DataTypes } from 'sequelize';
 import db from '../config/database.js';
 
-export const PortfolioRequest = db.define(
-    'Portfolio',
+export const Portfolio = db.define(
+    'PortfolioRequest',
     {
         heading: {
             type: DataTypes, String,

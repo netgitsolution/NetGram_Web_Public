@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from '../config/db.config.js';
 
 export const Navbar = sequelize.define(
-    'Navbar',
+    'NavbarRequest',
     {
         heading: {
             type: DataTypes.STRING,

@@ -19,6 +19,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import ServicesPage from "./pages/Services";
 import AboutPage from "./pages/About";
 import Career from "./pages/Career";
+import Blog from "./pages/Blog";
 
 // Admin Pages
 import AdminLayout from "./admin/AdminLayout";
@@ -49,6 +50,7 @@ const AppWrapper = ({ isLoggedIn, handleLogin, handleLogout }) => {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/careers" element={<Career />} />
+        <Route path="/blog" element={<Blog />} />
 
         {/* Admin Login */}
         <Route path="/adminLogin" element={<LoginAdmin onLogin={handleLogin} />} />

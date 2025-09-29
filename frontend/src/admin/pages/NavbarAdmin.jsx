@@ -51,7 +51,7 @@ export default function NavbarAdmin() {
                 </div>
 
                 {/* Page Headings */}
-                <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6">
+                {/* <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6">
                     <h2 className="text-xl sm:text-2xl font-semibold mb-4">Page Headings</h2>
                     <div className="space-y-3">
                         {pageHeadings.map((heading, index) => (
@@ -91,7 +91,7 @@ export default function NavbarAdmin() {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Submit Button */}
                 <div className="flex justify-center">

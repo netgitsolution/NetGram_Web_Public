@@ -13,7 +13,7 @@ import {
     FaMapMarkerAlt,
     FaLinkedin,
     FaTwitter,
-    FaFacebook,
+    FaYoutube,
     FaInstagram,
     FaChartLine,
     FaPenNib,
@@ -384,7 +384,7 @@ const AboutPage = () => {
                                     <FaTwitter size={24} />
                                 </a>
                                 <a href="#" className="hover:text-emerald-400 transition transform hover:scale-110">
-                                    <FaFacebook size={24} />
+                                    <FaYoutube size={24} />
                                 </a>
                                 <a href="#" className="hover:text-emerald-400 transition transform hover:scale-110">
                                     <FaInstagram size={24} />

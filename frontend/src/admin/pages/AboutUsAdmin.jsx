@@ -8,6 +8,10 @@ export default function AboutAdmin() {
   const [mission, setMission] = useState({ heading: "", text: "" });
 
   const [coreValues, setCoreValues] = useState([{ name: "", text: "" }]);
+  const [teamMembers, setTeamMembers] = useState([
+    { name: "", role: "", img: "", linkedin: "", twitter: "" },
+  ]);
+
   const [contact, setContact] = useState({ mobile: "", gmail: "", address: "" });
   const [businessHours, setBusinessHours] = useState([{ day: "", inTime: "", outTime: "" }]);
   const [social, setSocial] = useState({ facebook: "", twitter: "", instagram: "", youtube: "", linkedin: "" });
@@ -19,6 +23,17 @@ export default function AboutAdmin() {
       const newValues = [...coreValues];
       newValues.splice(index, 1);
       setCoreValues(newValues);
+    }
+  };
+
+  // Team Members
+  const addTeamMember = () =>
+    setTeamMembers([...teamMembers, { name: "", role: "", img: "", linkedin: "", twitter: "" }]);
+  const removeTeamMember = (index) => {
+    if (teamMembers.length > 1) {
+      const newTeam = [...teamMembers];
+      newTeam.splice(index, 1);
+      setTeamMembers(newTeam);
     }
   };
 
@@ -40,6 +55,7 @@ export default function AboutAdmin() {
       story,
       mission,
       coreValues,
+      teamMembers,
       contact,
       businessHours,
       social,
@@ -164,6 +180,91 @@ export default function AboutAdmin() {
           ))}
         </div>
 
+        {/* Meet Our Team */}
+        <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Meet Our Team</h2>
+          {teamMembers.map((member, index) => (
+            <div key={index} className="flex flex-col sm:flex-row gap-2 mb-3 items-center">
+              <input
+                type="text"
+                placeholder="Name"
+                value={member.name}
+                onChange={(e) => {
+                  const newTeam = [...teamMembers];
+                  newTeam[index].name = e.target.value;
+                  setTeamMembers(newTeam);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <input
+                type="text"
+                placeholder="Role"
+                value={member.role}
+                onChange={(e) => {
+                  const newTeam = [...teamMembers];
+                  newTeam[index].role = e.target.value;
+                  setTeamMembers(newTeam);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <input
+                type="text"
+                placeholder="Image URL"
+                value={member.img}
+                onChange={(e) => {
+                  const newTeam = [...teamMembers];
+                  newTeam[index].img = e.target.value;
+                  setTeamMembers(newTeam);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <input
+                type="text"
+                placeholder="LinkedIn Link"
+                value={member.linkedin}
+                onChange={(e) => {
+                  const newTeam = [...teamMembers];
+                  newTeam[index].linkedin = e.target.value;
+                  setTeamMembers(newTeam);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <input
+                type="text"
+                placeholder="Twitter Link"
+                value={member.twitter}
+                onChange={(e) => {
+                  const newTeam = [...teamMembers];
+                  newTeam[index].twitter = e.target.value;
+                  setTeamMembers(newTeam);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+
+              <div className="flex gap-1 mt-2 sm:mt-0">
+                {index === teamMembers.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={addTeamMember}
+                    className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  >
+                    +
+                  </button>
+                )}
+                {teamMembers.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeTeamMember(index)}
+                    className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Contact Us */}
         <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
           <h2 className="text-xl sm:text-2xl font-semibold mb-4">Contact Us</h2>
@@ -187,7 +288,7 @@ export default function AboutAdmin() {
             onChange={(e) => setContact({ ...contact, address: e.target.value })}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             rows={2}
-          ></textarea>
+          />
         </div>
 
         {/* Business Hours */}

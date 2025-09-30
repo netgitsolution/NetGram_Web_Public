@@ -4,6 +4,6 @@ import { updatePortfolioRequest, getPortfolioRequest } from '../controllers/port
 const router = express.Router();
 
 router.post('/request', updatePortfolioRequest);
-router.post('/getData', getPortfolioRequest);
+router.get('/getData', getPortfolioRequest);
 
 export default router;

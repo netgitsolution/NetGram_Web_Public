@@ -7,3 +7,17 @@ export const updateAbout = async (req, res) => {
 
     }
 };
+
+export const getAbout = async (req, res) => {
+    try {
+        const abouts = await About.findAll();
+        return res.status(200).json(abouts);
+    }
+    catch (error) {
+        console.error("Error fetching About data:", error);
+        return res.status(500).json({
+            message: "Something went wrong getAbout!",
+            error: error.message
+        });
+    };
+};

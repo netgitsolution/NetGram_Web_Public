@@ -45,7 +45,7 @@ export const getHomeRequest = async (req, res) => {
     } catch (error) {
         console.error("Error fetching Home Requests:", error);
         return res.status(500).json({
-            message: "Something went wrong!",
+            message: "Something went wrong getHomeRequest!",
             error: error.message
         });
     }

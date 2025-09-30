@@ -32,3 +32,17 @@ export const updatePortfolioRequest = async (req, res) => {
         });
     }
 };
+
+export const getPortfolioRequest = async (req, res) => {
+    try {
+        const portfolioRequests = await PortfolioRequest.findAll();
+        return res.status(200).json(portfolioRequests);
+    }
+    catch (error) {
+        console.error("Error fetching Portfolio Requests:", error);
+        return res.status(500).json({
+            message: "Something went wrong in getPortfolioRequest!",
+            error: error.message
+        });
+    }
+};

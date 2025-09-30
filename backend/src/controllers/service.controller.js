@@ -8,3 +8,16 @@ export const updateServiceRequest = async (req, res) => {
 
     }
 };
+
+export const getServiceRequest = async (req, res) => {
+    try {
+        const serviceRequests = await Service.findAll();
+        return res.status(200).json(serviceRequests);
+    } catch (error) {
+        console.error("Error fetching Service Requests:", error);
+        return res.status(500).json({
+            message: "Something went wrong getServiceRequest!",
+            error: error.message
+        });
+    };
+};

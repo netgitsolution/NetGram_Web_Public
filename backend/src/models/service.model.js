@@ -13,16 +13,7 @@ export const Service = sequelize.define(
             allowNull: false,
         },
         service_card: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        service_description: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-        },
-        service_section: {
-            type: DataTypes.STRING,
-            allowNull: false, // Image ka path save hoga
+            type: DataTypes.JSONB // Array of objects
         },
         flexible_section: {
             type: DataTypes.STRING,

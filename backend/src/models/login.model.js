@@ -5,7 +5,9 @@ export const Login = sequelize.define(
     "LoginRequest",
     {
         email: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         },
         password: {
             type: DataTypes.STRING

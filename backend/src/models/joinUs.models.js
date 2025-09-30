@@ -8,13 +8,15 @@ export const JoinUsRequest = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        heading_description: {
+        sub_heading: {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        opportunities_heading: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        role: {
+            type: DataTypes.ARRAY(DataTypes.STRING)
+        },
+        apply: {
+            type: DataTypes.ARRAY(DataTypes.STRING)
         }
     }
 );

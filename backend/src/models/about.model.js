@@ -26,6 +26,9 @@ export const About = sequelize.define(
         core_values: {
             type: DataTypes.ARRAY(DataTypes.STRING) // Array of strings
         },
+        service: {
+            type: DataTypes.ARRAY(DataTypes.STRING)
+        },
         mobile_number: {
             type: DataTypes.STRING
         },

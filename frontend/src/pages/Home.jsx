@@ -5,46 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { getHomeData } from "../api/homeApi";
 
-// const testimonials = [
-//     {
-//         quote:
-//             "NetGram IT Solutions transformed our digital presence. Their web development and marketing expertise helped us achieve 300% growth in online leads.",
-//         name: "Priya Sharma",
-//         company: "TechStart India",
-//     },
-//     {
-//         quote:
-//             "Excellent content creation services. Their team delivered high-quality marketing materials that perfectly aligned with our brand vision.",
-//         name: "Rajesh Kumar",
-//         company: "Kumar Enterprises",
-//     },
-//     {
-//         quote:
-//             "Professional training services that upskilled our entire team. Highly recommended for businesses looking to enhance their digital capabilities.",
-//         name: "Anita Mehta",
-//         company: "Mehta Consulting",
-//     },
-//     {
-//         quote:
-//             "Amazing support and innovative solutions. They helped us go digital smoothly!",
-//         name: "Arjun Patel",
-//         company: "Patel Group",
-//     },
-//     {
-//         quote:
-//             "Superb creativity in content creation. Exactly what our brand needed.",
-//         name: "Neha Singh",
-//         company: "Singh Designs",
-//     },
-//     {
-//         quote:
-//             "They made our website fast, secure and super professional. Highly recommended!",
-//         name: "Ravi Verma",
-//         company: "Verma Textiles",
-//     },
-// ];
-
-
 const HomePage = () => {
 
     const emptyData = {

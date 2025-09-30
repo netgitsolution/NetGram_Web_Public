@@ -80,9 +80,8 @@ export default function AdminLayout({ onLogout }) {
         <div className="p-4 border-t border-gray-700">
           <button
             onClick={onLogout}
-            className={`flex items-center gap-2 w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all ${
-              !sidebarOpen && "justify-center"
-            }`}
+            className={`flex items-center gap-2 w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all ${!sidebarOpen && "justify-center"
+              }`}
           >
             <LogOut size={20} />
             {sidebarOpen && <span>Logout</span>}
@@ -170,9 +169,8 @@ export default function AdminLayout({ onLogout }) {
 // Sidebar Button Component
 const SidebarButton = ({ icon, label, sidebarOpen, active, onClick }) => (
   <button
-    className={`flex items-center gap-3 w-full p-2 rounded-lg transition-all ${
-      active ? "bg-blue-600 hover:bg-blue-500" : "hover:bg-gray-700"
-    } ${!sidebarOpen && "justify-center"}`}
+    className={`flex items-center gap-3 w-full p-2 rounded-lg transition-all ${active ? "bg-blue-600 hover:bg-blue-500" : "hover:bg-gray-700"
+      } ${!sidebarOpen && "justify-center"}`}
     onClick={onClick}
   >
     {icon}

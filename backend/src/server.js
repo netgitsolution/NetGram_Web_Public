@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
-import { sequelize, checkDbConnection, syncDatabase } from "./config/db.config.js";
+import { checkDbConnection, syncDatabase } from "./config/db.config.js";
 import history from 'connect-history-api-fallback';
 import listEndpoints from 'express-list-endpoints';
 
@@ -14,7 +14,7 @@ import projectRoutes from "./routes/project.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import careerRoutes from "./routes/career.routes.js";
 import homeRoutes from "./routes/home.routes.js";
-
+// import portfolioRoutes from "./routes/portfolio.routes.js";
 const app = express();
 
 const __dirname = path.resolve();
@@ -33,8 +33,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/career", careerRoutes);
 app.use("/api/home", homeRoutes);
-
-
+// app.use("/api/portfolio", portfolioRoutes);
 
 console.log('Before static middleware:', listEndpoints(app));
 // SPA routing MUST come before static so rewritten URLs get served

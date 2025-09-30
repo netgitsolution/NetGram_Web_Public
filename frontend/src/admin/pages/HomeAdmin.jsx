@@ -1,22 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { submitHomeData, getHomeData } from "../../api/homeApi";
 
 export default function HomeAdmin() {
-    const [services, setServices] = useState([""]);
-    const [headingName, setHeadingName] = useState("");
-    const [textName, setTextName] = useState("");
-    const [clients, setClients] = useState([{ clientName: "", feedback: "", companyName: "" }]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log({ services, headingName, textName, clients });
-        alert("Form submitted successfully!");
-        setServices([""]);
-        setHeadingName("");
-        setTextName("");
-        setClients([{ clientName: "", feedback: "", companyName: "" }]);
+    // ------------------- EMPTY FALLBACK -------------------
+    const emptyData = {
+        id: 1,
+        service_heading: [""],
+        hero_heading: "",
+        hero_text: "",
+        client: [{ clientName: "", feedback: "", companyName: "" }],
     };
 
-    // Service handlers
+    // ------------------- STATES -------------------
+    const [services, setServices] = useState(emptyData.service_heading);
+    const [headingName, setHeadingName] = useState(emptyData.hero_heading);
+    const [textName, setTextName] = useState(emptyData.hero_text);
+    const [clients, setClients] = useState(emptyData.client);
+
+    // ------------------- FETCH DATA ON MOUNT -------------------
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getHomeData();
+
+                if (res && res.length > 0) {
+                    const data = res[0]; // assuming API returns array
+
+                    setServices(data.service_heading || [""]);
+                    setHeadingName(data.hero_heading || "");
+                    setTextName(data.hero_text || "");
+                    setClients(
+                        data.client?.map((c) => ({
+                            clientName: c.name || c.clientName || "",
+                            feedback: c.feedback || "",
+                            companyName: c.companyName || c.name || "",
+                        })) || [{ clientName: "", feedback: "", companyName: "" }]
+                    );
+                }
+            } catch (error) {
+                console.error("Error fetching home data:", error);
+                // fallback already empty
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // ------------------- FORM SUBMIT -------------------
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            id: 1,
+            service_heading: services,
+            hero_heading: headingName,
+            hero_text: textName,
+            client: clients,
+        };
+
+        try {
+            const res = await submitHomeData(payload);
+            alert(res.message);
+            console.log("Updated Data:", res.data);
+
+            // ✅ updated data ko state me set karna
+            if (res.data) {
+                setServices(res.data.service_heading || [""]);
+                setHeadingName(res.data.hero_heading || "");
+                setTextName(res.data.hero_text || "");
+                setClients(
+                    res.data.client || [{ clientName: "", feedback: "", companyName: "" }]
+                );
+            }
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            alert(error.message || "Something went wrong!");
+        }
+    };
+
+    // ------------------- SERVICE HANDLERS -------------------
     const addServiceInput = () => setServices([...services, ""]);
     const handleServiceChange = (index, value) => {
         const newServices = [...services];
@@ -28,16 +90,14 @@ export default function HomeAdmin() {
         setServices(newServices.length ? newServices : [""]);
     };
 
-    // Client handlers
+    // ------------------- CLIENT HANDLERS -------------------
     const addClientCard = () =>
         setClients([...clients, { clientName: "", feedback: "", companyName: "" }]);
 
     const removeClientCard = (index) => {
         const newClients = clients.filter((_, i) => i !== index);
         setClients(
-            newClients.length
-                ? newClients
-                : [{ clientName: "", feedback: "", companyName: "" }]
+            newClients.length ? newClients : [{ clientName: "", feedback: "", companyName: "" }]
         );
     };
 
@@ -47,6 +107,7 @@ export default function HomeAdmin() {
         setClients(newClients);
     };
 
+    // ------------------- JSX -------------------
     return (
         <div className="min-h-screen bg-gray-100 flex items-start justify-center p-4 sm:p-6 lg:p-10">
             <div className="w-full max-w-4xl space-y-6">
@@ -56,7 +117,9 @@ export default function HomeAdmin() {
 
                 {/* Service Section */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6">
-                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Service Section</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+                        Service Section
+                    </h1>
                     <div className="space-y-3">
                         {services.map((service, index) => (
                             <div
@@ -96,7 +159,9 @@ export default function HomeAdmin() {
 
                 {/* Hero Section */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6">
-                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Hero Section</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+                        Hero Section
+                    </h1>
                     <div className="space-y-4">
                         <div>
                             <h3 className="text-lg sm:text-xl font-semibold mb-1">Heading</h3>
@@ -125,7 +190,9 @@ export default function HomeAdmin() {
 
                 {/* Testimonial Section */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
-                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Testimonial Section</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+                        Testimonial Section
+                    </h1>
 
                     <div className="space-y-4">
                         {clients.map((client, index) => (

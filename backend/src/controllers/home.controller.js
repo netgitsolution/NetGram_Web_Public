@@ -37,3 +37,16 @@ export const updateHomeRequest = async (req, res) => {
         });
     }
 };
+
+export const getHomeRequest = async (req, res) => {
+    try {
+        const homeRequests = await HomeRequest.findAll();
+        return res.status(200).json(homeRequests);
+    } catch (error) {
+        console.error("Error fetching Home Requests:", error);
+        return res.status(500).json({
+            message: "Something went wrong!",
+            error: error.message
+        });
+    }
+};

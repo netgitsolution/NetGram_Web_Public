@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from "react";
 
-const services = [
-    "Web Development",
-    "Content Marketing",
-    "Media Creation",
-    "WordPress",
-    "Shopify",
-];
+// const services = [
+//     "Web Development",
+//     "Content Marketing",
+//     "Media Creation",
+//     "WordPress",
+//     "Shopify",
+// ];
 
 // Different fonts (15+)
 const fonts = [
@@ -27,9 +27,9 @@ const fonts = [
     "Segoe UI",
 ];
 
-const BackgroundAnimation = () => {
+const BackgroundAnimation = (props) => {
     const canvasRef = useRef(null);
-
+    const services = props.services;
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -139,7 +139,7 @@ const BackgroundAnimation = () => {
             window.removeEventListener("resize", handleResize);
             cancelAnimationFrame(animationId);
         };
-    }, []);
+    }, [services]);
 
     return (
         <canvas

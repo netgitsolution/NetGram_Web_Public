@@ -5,7 +5,7 @@ export const PortfolioRequest = sequelize.define(
     'PortfolioRequest',
     {
         heading: {
-            type: DataTypes, String,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         sub_heading: {

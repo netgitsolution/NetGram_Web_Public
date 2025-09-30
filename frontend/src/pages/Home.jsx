@@ -1,51 +1,95 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BackgroundAnimation from "../components/BackgroundAnimation";
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { getHomeData } from "../api/homeApi";
 
-// Dummy Data
-const testimonials = [
-    {
-        quote:
-            "NetGram IT Solutions transformed our digital presence. Their web development and marketing expertise helped us achieve 300% growth in online leads.",
-        name: "Priya Sharma",
-        company: "TechStart India",
-    },
-    {
-        quote:
-            "Excellent content creation services. Their team delivered high-quality marketing materials that perfectly aligned with our brand vision.",
-        name: "Rajesh Kumar",
-        company: "Kumar Enterprises",
-    },
-    {
-        quote:
-            "Professional training services that upskilled our entire team. Highly recommended for businesses looking to enhance their digital capabilities.",
-        name: "Anita Mehta",
-        company: "Mehta Consulting",
-    },
-    {
-        quote:
-            "Amazing support and innovative solutions. They helped us go digital smoothly!",
-        name: "Arjun Patel",
-        company: "Patel Group",
-    },
-    {
-        quote:
-            "Superb creativity in content creation. Exactly what our brand needed.",
-        name: "Neha Singh",
-        company: "Singh Designs",
-    },
-    {
-        quote:
-            "They made our website fast, secure and super professional. Highly recommended!",
-        name: "Ravi Verma",
-        company: "Verma Textiles",
-    },
-];
+// const testimonials = [
+//     {
+//         quote:
+//             "NetGram IT Solutions transformed our digital presence. Their web development and marketing expertise helped us achieve 300% growth in online leads.",
+//         name: "Priya Sharma",
+//         company: "TechStart India",
+//     },
+//     {
+//         quote:
+//             "Excellent content creation services. Their team delivered high-quality marketing materials that perfectly aligned with our brand vision.",
+//         name: "Rajesh Kumar",
+//         company: "Kumar Enterprises",
+//     },
+//     {
+//         quote:
+//             "Professional training services that upskilled our entire team. Highly recommended for businesses looking to enhance their digital capabilities.",
+//         name: "Anita Mehta",
+//         company: "Mehta Consulting",
+//     },
+//     {
+//         quote:
+//             "Amazing support and innovative solutions. They helped us go digital smoothly!",
+//         name: "Arjun Patel",
+//         company: "Patel Group",
+//     },
+//     {
+//         quote:
+//             "Superb creativity in content creation. Exactly what our brand needed.",
+//         name: "Neha Singh",
+//         company: "Singh Designs",
+//     },
+//     {
+//         quote:
+//             "They made our website fast, secure and super professional. Highly recommended!",
+//         name: "Ravi Verma",
+//         company: "Verma Textiles",
+//     },
+// ];
+
 
 const HomePage = () => {
+
+    const emptyData = {
+        id: 1,
+        service_heading: [""],
+        hero_heading: "",
+        hero_text: "",
+        client: [{ clientName: "", feedback: "", companyName: "" }],
+    };
+    const [services, setServices] = useState(emptyData.service_heading);
+    const [headingName, setHeadingName] = useState(emptyData.hero_heading);
+    const [textName, setTextName] = useState(emptyData.hero_text);
+    const [clients, setClients] = useState(emptyData.client);
+    const testimonials = clients;
     const testimonialsRef = useRef(null);
+
+    // ------------------- FETCH DATA ON MOUNT -------------------
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getHomeData();
+
+                if (res && res.length > 0) {
+                    const data = res[0]; // assuming API returns array
+
+                    setServices(data.service_heading || [""]);
+                    setHeadingName(data.hero_heading || "");
+                    setTextName(data.hero_text || "");
+                    setClients(
+                        data.client?.map((c) => ({
+                            clientName: c.name || c.clientName || "",
+                            feedback: c.feedback || "",
+                            companyName: c.companyName || c.name || "",
+                        })) || [{ clientName: "", feedback: "", companyName: "" }]
+                    );
+                }
+            } catch (error) {
+                console.error("Error fetching home data:", error);
+                // fallback already empty
+            }
+        };
+        fetchData();
+    }, []);
+
+
     const navigate = useNavigate();
 
     const handleScrollToTestimonials = () => {
@@ -73,7 +117,7 @@ const HomePage = () => {
         <div className="relative m-0 p-0">
             {/* Hero Section */}
             <section className="relative bg-[#192335] text-white h-screen flex items-center justify-center overflow-hidden">
-                <BackgroundAnimation />
+                <BackgroundAnimation services={services} />
 
                 <div className="absolute inset-0 bg-black/50 z-0"></div>
 
@@ -84,8 +128,9 @@ const HomePage = () => {
                         transition={{ duration: 1 }}
                         className="text-4xl md:text-5xl font-extrabold leading-tight mb-4"
                     >
-                        Transforming Your Digital Presence <br />
-                        with Innovative IT Solutions
+                        {headingName}
+                        {/* Transforming Your Digital Presence <br />
+                        with Innovative IT Solutions */}
                     </motion.h1>
 
                     <motion.p
@@ -94,9 +139,10 @@ const HomePage = () => {
                         transition={{ delay: 0.5, duration: 1 }}
                         className="text-gray-200 text-base md:text-lg mb-6"
                     >
-                        We provide cutting-edge IT solutions that drive business growth and
+                        {textName}
+                        {/* We provide cutting-edge IT solutions that drive business growth and
                         digital transformation for our clients across digital media
-                        marketing, content creation, web development, and training services.
+                        marketing, content creation, web development, and training services. */}
                     </motion.p>
 
                     <motion.div
@@ -146,13 +192,13 @@ const HomePage = () => {
                                         className="min-w-[250px] max-w-sm bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-lg transition"
                                     >
                                         <p className="text-gray-200 mb-4">
-                                            &quot;{testimonial.quote}&quot;
+                                            &quot;{testimonial.feedback}&quot;
                                         </p>
                                         <h3 className="font-semibold text-lg text-white">
-                                            {testimonial.name}
+                                            {testimonial.clientName}
                                         </h3>
                                         <p className="text-gray-300 text-sm">
-                                            {testimonial.company}
+                                            {testimonial.companyName}
                                         </p>
                                     </div>
                                 ))}

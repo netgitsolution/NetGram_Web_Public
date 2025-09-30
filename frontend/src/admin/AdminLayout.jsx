@@ -17,8 +17,8 @@ import PortfolioAdmin from "./pages/PortfolioAdmin";
 import ServicesAdmin from "./pages/ServicesAdmin";
 import JoinUsAdmin from "./pages/JoinUsAdmin";
 import AboutUsAdmin from "./pages/AboutUsAdmin";
-import NavbarAdmin from "./pages/NavbarAdmin";
 import FooterAdmin from "./pages/FooterAdmin";
+import BlogAdmin from "./pages/BlogAdmin";
 
 export default function AdminLayout({ onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -37,8 +37,8 @@ export default function AdminLayout({ onLogout }) {
     { label: "Services", icon: <Wrench size={20} /> },
     { label: "Join Us", icon: <Users size={20} /> },
     { label: "About", icon: <Info size={20} /> },
-    { label: "Navbar", icon: <Layout size={20} /> },
-    { label: "Footer", icon: <Columns size={20} /> },
+    { label: "Blog", icon: <Layout size={20} /> },
+    { label: "Footer", icon: <Columns size={20} /> }
   ];
 
   return (
@@ -159,6 +159,7 @@ export default function AdminLayout({ onLogout }) {
           {activeSection === "Services" && <ServicesAdmin />}
           {activeSection === "Join Us" && <JoinUsAdmin />}
           {activeSection === "About" && <AboutUsAdmin />}
+          {activeSection === "Blog" && <BlogAdmin />}
           {activeSection === "Footer" && <FooterAdmin />}
         </main>
       </div>

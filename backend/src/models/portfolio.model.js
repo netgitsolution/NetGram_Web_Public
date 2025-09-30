@@ -6,11 +6,9 @@ export const PortfolioRequest = sequelize.define(
     {
         heading: {
             type: DataTypes.STRING,
-            allowNull: false,
         },
         sub_heading: {
             type: DataTypes.STRING,
-            allowNull: false,
         },
         project_category: {
             type: DataTypes.ARRAY(DataTypes.STRING)

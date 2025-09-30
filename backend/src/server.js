@@ -13,9 +13,16 @@ dotenv.config();
 import projectRoutes from "./routes/project.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import careerRoutes from "./routes/career.routes.js";
+
+// Page routes
 import homeRoutes from "./routes/home.routes.js";
 import portfolioRoutes from "./routes/portfolio.routes.js";
-// import portfolioRoutes from "./routes/portfolio.routes.js";
+import servicesRoutes from "./routes/services.routes.js";
+import joinUsRoutes from "./routes/joinUs.routes.js";
+import aboutRoutes from "./routes/about.routes.js";
+import blogRoutes from "./routes/blog.routes.js";
+import footerRoutes from "./routes/footer.routes.js";
+
 const app = express();
 
 const __dirname = path.resolve();

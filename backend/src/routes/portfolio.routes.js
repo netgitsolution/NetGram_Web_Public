@@ -1,4 +1,4 @@
-import express from 'expresss';
+import express from 'express';
 import { updatePortfolioRequest, getPortfolioRequest } from '../controllers/portfolio.controller.js';
 
 const router = express.Router();

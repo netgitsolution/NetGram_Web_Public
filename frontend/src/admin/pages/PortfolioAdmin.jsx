@@ -3,12 +3,8 @@ import React, { useState } from "react";
 export default function ProjectAdmin() {
     const [headingName, setHeadingName] = useState("");
     const [textName, setTextName] = useState("");
-    const [projectCategory, setProjectCategory] = useState("");
-    const [projectName, setProjectName] = useState("");
-    const [projectDescription, setProjectDescription] = useState("");
-    const [projectStack, setProjectStack] = useState("");
 
-    // Categories state (dynamic)
+    // Categories
     const [categories, setCategories] = useState([
         "All Projects",
         "Web Development",
@@ -18,12 +14,16 @@ export default function ProjectAdmin() {
         "Social Media",
         "Content Creation",
     ]);
-
+    const [projectCategory, setProjectCategory] = useState("");
     const [newCategory, setNewCategory] = useState("");
+
+    // Unified projects array
+    const [projects, setProjects] = useState([
+        { name: "", description: "", stack: "" },
+    ]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         if (!projectCategory) {
             alert("Please select a project category.");
             return;
@@ -33,40 +33,43 @@ export default function ProjectAdmin() {
             headingName,
             textName,
             projectCategory,
-            projectName,
-            projectDescription,
-            projectStack,
+            projects,
         });
         alert("Form submitted successfully!");
 
         setHeadingName("");
         setTextName("");
         setProjectCategory("");
-        setProjectName("");
-        setProjectDescription("");
-        setProjectStack("");
+        setProjects([{ name: "", description: "", stack: "" }]);
     };
 
-    // Add Category
+    // Category functions
     const handleAddCategory = () => {
-        if (newCategory.trim() === "") {
-            alert("Category name cannot be empty.");
-            return;
-        }
-        if (categories.includes(newCategory)) {
-            alert("Category already exists.");
-            return;
-        }
+        if (!newCategory.trim()) return alert("Category name cannot be empty.");
+        if (categories.includes(newCategory)) return alert("Category already exists.");
         setCategories([...categories, newCategory]);
         setNewCategory("");
     };
 
-    // Delete Category
     const handleDeleteCategory = (category) => {
         setCategories(categories.filter((c) => c !== category));
-        if (projectCategory === category) {
-            setProjectCategory(""); // reset selected category if deleted
-        }
+        if (projectCategory === category) setProjectCategory("");
+    };
+
+    // Project functions
+    const handleProjectChange = (index, field, value) => {
+        const newProjects = [...projects];
+        newProjects[index][field] = value;
+        setProjects(newProjects);
+    };
+
+    const handleAddProject = () => {
+        setProjects([...projects, { name: "", description: "", stack: "" }]);
+    };
+
+    const handleRemoveProject = (index) => {
+        if (projects.length === 1) return; // prevent deleting last project
+        setProjects(projects.filter((_, i) => i !== index));
     };
 
     return (
@@ -76,132 +79,144 @@ export default function ProjectAdmin() {
                     Project Admin Panel
                 </h2>
 
-                {/* Section 1: Heading & Text */}
+                {/* Heading & Text */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
                     <h1 className="text-xl sm:text-2xl font-semibold mb-4">Heading & Text Section</h1>
 
                     <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Heading Name
-                        </label>
+                        <label className="block text-gray-700 font-semibold mb-1">Heading Name</label>
                         <input
                             type="text"
                             value={headingName}
                             onChange={(e) => setHeadingName(e.target.value)}
                             placeholder="Enter heading name"
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Text Name
-                        </label>
+                        <label className="block text-gray-700 font-semibold mb-1">Text Name</label>
                         <textarea
                             value={textName}
                             onChange={(e) => setTextName(e.target.value)}
                             placeholder="Enter text"
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             rows={4}
-                            required
                         />
                     </div>
                 </div>
 
-                {/* Section 2: Project Details */}
+                {/* Project Category */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
-                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Project Details Section</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Project Category</h1>
 
-                    {/* Dynamic Project Category */}
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-2">Project Category Name</label>
-                        <div className="flex flex-wrap gap-4 mb-4">
-                            {categories.map((category) => (
-                                <label key={category} className="flex items-center gap-2 border px-3 py-1 rounded-lg bg-gray-50">
-                                    <input
-                                        type="radio"
-                                        name="projectCategory"
-                                        value={category}
-                                        checked={projectCategory === category}
-                                        onChange={(e) => setProjectCategory(e.target.value)}
-                                        className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-400"
-                                    />
-                                    <span className="text-gray-700">{category}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDeleteCategory(category)}
-                                        className="text-red-500 text-sm hover:underline ml-2"
-                                    >
-                                        ✕
-                                    </button>
-                                </label>
-                            ))}
-                        </div>
+                    <div className="flex flex-wrap gap-4 mb-4">
+                        {categories.map((category) => (
+                            <label key={category} className="flex items-center gap-2 border px-3 py-1 rounded-lg bg-gray-50">
+                                <input
+                                    type="radio"
+                                    name="projectCategory"
+                                    value={category}
+                                    checked={projectCategory === category}
+                                    onChange={(e) => setProjectCategory(e.target.value)}
+                                    className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-400"
+                                />
+                                <span className="text-gray-700">{category}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => handleDeleteCategory(category)}
+                                    className="text-red-500 text-sm hover:underline ml-2"
+                                >
+                                    ✕
+                                </button>
+                            </label>
+                        ))}
+                    </div>
 
-                        {/* Add New Category */}
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                value={newCategory}
-                                onChange={(e) => setNewCategory(e.target.value)}
-                                placeholder="New category name"
-                                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value)}
+                            placeholder="New category name"
+                            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                            type="button"
+                            onClick={handleAddCategory}
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Add
+                        </button>
+                    </div>
+                </div>
+
+                {/* Unified Projects Section */}
+                <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Projects</h1>
+
+                    {projects.map((project, index) => (
+                        <div key={index} className="border p-4 rounded-lg space-y-2 relative">
+                            {/* Remove Button */}
                             <button
                                 type="button"
-                                onClick={handleAddCategory}
-                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                                onClick={() => handleRemoveProject(index)}
+                                disabled={projects.length === 1} // disable if only one project
+                                className={`absolute top-2 right-2 ${projects.length === 1
+                                        ? "text-gray-400 cursor-not-allowed"
+                                        : "text-red-500 hover:underline"
+                                    }`}
                             >
-                                Add
+                                ✕
                             </button>
+
+                            <h2 className="font-semibold text-gray-700 mb-2">Project {index + 1}</h2>
+
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-1">Project Name</label>
+                                <input
+                                    type="text"
+                                    value={project.name}
+                                    onChange={(e) => handleProjectChange(index, "name", e.target.value)}
+                                    placeholder="Enter project name"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-1">Project Description</label>
+                                <textarea
+                                    value={project.description}
+                                    onChange={(e) => handleProjectChange(index, "description", e.target.value)}
+                                    placeholder="Enter project description"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    rows={3}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-1">Project Stack</label>
+                                <input
+                                    type="text"
+                                    value={project.stack}
+                                    onChange={(e) => handleProjectChange(index, "stack", e.target.value)}
+                                    placeholder="Enter stack (e.g., React, Node, MySQL)"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
                         </div>
-                    </div>
+                    ))}
 
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Project Name
-                        </label>
-                        <input
-                            type="text"
-                            value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
-                            placeholder="Enter project name"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Project Description
-                        </label>
-                        <textarea
-                            value={projectDescription}
-                            onChange={(e) => setProjectDescription(e.target.value)}
-                            placeholder="Enter project description"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            rows={4}
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Project Stack
-                        </label>
-                        <input
-                            type="text"
-                            value={projectStack}
-                            onChange={(e) => setProjectStack(e.target.value)}
-                            placeholder="Enter stack (e.g., React, Node, MySQL)"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
+                    <button
+                        type="button"
+                        onClick={handleAddProject}
+                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                    >
+                        + Add Project
+                    </button>
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <div className="flex justify-center">
                     <button
                         type="submit"

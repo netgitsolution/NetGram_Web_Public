@@ -14,6 +14,7 @@ import projectRoutes from "./routes/project.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import careerRoutes from "./routes/career.routes.js";
 import homeRoutes from "./routes/home.routes.js";
+import portfolioRoutes from "./routes/portfolio.routes.js";
 // import portfolioRoutes from "./routes/portfolio.routes.js";
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/career", careerRoutes);
 app.use("/api/home", homeRoutes);
+app.use("/api/portfolio", portfolioRoutes);
 // app.use("/api/portfolio", portfolioRoutes);
 
 console.log('Before static middleware:', listEndpoints(app));

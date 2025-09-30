@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../config/database.js';
+import { sequelize } from '../config/db.config.js';
 
 export const PortfolioRequest = sequelize.define(
     'PortfolioRequest',
@@ -13,20 +13,10 @@ export const PortfolioRequest = sequelize.define(
             allowNull: false,
         },
         project_category: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.ARRAY(DataTypes.STRING)
         },
-        project_name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        project_description: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-        },
-        project_stack: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        project: {
+            type: DataTypes.JSONB
         }
     }, {
     tableName: 'portfolio',

@@ -26,3 +26,7 @@
     border-top-left-radius: 0;
     /* remove old */
 }
+
+/* Add in global CSS */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

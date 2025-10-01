@@ -37,7 +37,7 @@ const PortfolioPage = () => {
     const [formData, setFormData] = useState({
         full_name: "",
         email: "",
-        phone: "",   // ✅ New phone field
+        phone_number: "",
         project_type: "Web Development",
         project_details: ""
     });
@@ -168,8 +168,8 @@ const PortfolioPage = () => {
                             <FaPhone className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
                             <input
                                 type="tel"
-                                name="phone"
-                                value={formData.phone}
+                                name="phone_number"
+                                value={formData.phone_number || ""}
                                 onChange={handleChange}
                                 placeholder="Enter your phone number"
                                 required

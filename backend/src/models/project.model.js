@@ -13,6 +13,9 @@ export const ProjectRequest = sequelize.define(
             allowNull: false,
             validate: { isEmail: true },
         },
+        phone_number: {
+            type: DataTypes.STRING(15),
+        },
         project_type: {
             type: DataTypes.STRING(100),
             allowNull: false,

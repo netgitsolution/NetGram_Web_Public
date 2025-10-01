@@ -40,9 +40,15 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/projects", projectRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/career", careerRoutes);
+
+// Admin Page routes
 app.use("/api/home", homeRoutes);
 app.use("/api/portfolio", portfolioRoutes);
-// app.use("/api/portfolio", portfolioRoutes);
+app.use("/api/services", servicesRoutes);
+app.use("/api/joinUs", joinUsRoutes);
+app.use("/api/about", aboutRoutes);
+app.use("/api/blog", blogRoutes);
+app.use("/api/footer", footerRoutes);
 
 console.log('Before static middleware:', listEndpoints(app));
 // SPA routing MUST come before static so rewritten URLs get served

@@ -16,33 +16,34 @@ export default function BlogAdmin() {
         "Knowledge",
         "Content Creation",
     ]);
-    const [blogCategory, setBlogCategory] = useState("");
     const [newCategory, setNewCategory] = useState("");
 
     // Blogs Array
     const [blogs, setBlogs] = useState([
-        { title: "", author: "", date: "", summary: "", image: "" },
+        { title: "", author: "", date: "", summary: "", image: "", category: "" },
     ]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!blogCategory) {
-            alert("Please select a blog category.");
-            return;
+
+        // Check validation (category required for each blog)
+        for (let blog of blogs) {
+            if (!blog.category) {
+                alert("Please select category for all blogs.");
+                return;
+            }
         }
 
         console.log({
             headingName,
             textName,
-            blogCategory,
             blogs,
         });
         alert("Form submitted successfully!");
 
         setHeadingName("");
         setTextName("");
-        setBlogCategory("");
-        setBlogs([{ title: "", author: "", date: "", summary: "", image: "" }]);
+        setBlogs([{ title: "", author: "", date: "", summary: "", image: "", category: "" }]);
     };
 
     // Category functions
@@ -55,7 +56,7 @@ export default function BlogAdmin() {
 
     const handleDeleteCategory = (category) => {
         setCategories(categories.filter((c) => c !== category));
-        if (blogCategory === category) setBlogCategory("");
+        setBlogs(blogs.map(blog => blog.category === category ? { ...blog, category: "" } : blog));
     };
 
     // Blog functions
@@ -68,7 +69,7 @@ export default function BlogAdmin() {
     const handleAddBlog = () => {
         setBlogs([
             ...blogs,
-            { title: "", author: "", date: "", summary: "", image: "" },
+            { title: "", author: "", date: "", summary: "", image: "", category: "" },
         ]);
     };
 
@@ -111,34 +112,31 @@ export default function BlogAdmin() {
                     </div>
                 </div>
 
-                {/* Blog Category */}
+                {/* Categories List & Add */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
-                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Blog Category</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Manage Categories</h1>
 
-                    <div className="flex flex-wrap gap-4 mb-4">
+                    {/* Category List with Delete */}
+                    <div className="flex flex-wrap gap-2 mb-4">
                         {categories.map((category) => (
-                            <label key={category} className="flex items-center gap-2 border px-3 py-1 rounded-lg bg-gray-50">
-                                <input
-                                    type="radio"
-                                    name="blogCategory"
-                                    value={category}
-                                    checked={blogCategory === category}
-                                    onChange={(e) => setBlogCategory(e.target.value)}
-                                    className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-400"
-                                />
+                            <div
+                                key={category}
+                                className="flex items-center gap-2 border px-3 py-1 rounded-lg bg-gray-50"
+                            >
                                 <span className="text-gray-700">{category}</span>
                                 <button
                                     type="button"
                                     onClick={() => handleDeleteCategory(category)}
-                                    className="text-red-500 text-sm hover:underline ml-2"
+                                    className="text-red-500 text-sm hover:underline"
                                 >
                                     ✕
                                 </button>
-                            </label>
+                            </div>
                         ))}
                     </div>
 
-                    <div className="flex gap-2">
+                    {/* Add New Category */}
+                    <div className="flex gap-2 mt-4">
                         <input
                             type="text"
                             value={newCategory}
@@ -176,6 +174,23 @@ export default function BlogAdmin() {
                             </button>
 
                             <h2 className="font-semibold text-gray-700 mb-2">Blog {index + 1}</h2>
+
+                            {/* Select Category */}
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-1">Select Category</label>
+                                <select
+                                    value={blog.category}
+                                    onChange={(e) => handleBlogChange(index, "category", e.target.value)}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">-- Choose a category --</option>
+                                    {categories.map((category) => (
+                                        <option key={category} value={category}>
+                                            {category}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
                             <div>
                                 <label className="block text-gray-700 font-semibold mb-1">Blog Title</label>

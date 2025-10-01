@@ -36,20 +36,6 @@ export default function FooterAdmin() {
           {/* Heading Section */}
           <section className="space-y-4">
             <h2 className="text-xl sm:text-2xl font-semibold">Heading Section</h2>
-            <input
-              type="text"
-              placeholder="Main Heading"
-              value={heading}
-              onChange={(e) => setHeading(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <input
-              type="text"
-              placeholder="Name Heading"
-              value={nameHeading}
-              onChange={(e) => setNameHeading(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
             <textarea
               placeholder="Text"
               value={text}
@@ -57,39 +43,6 @@ export default function FooterAdmin() {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows={3}
             />
-          </section>
-
-          {/* Quick Links Section */}
-          <section className="space-y-4">
-            <h2 className="text-xl sm:text-2xl font-semibold">Quick Links</h2>
-            {quickLinks.map((link, index) => (
-              <div key={index} className="flex flex-col sm:flex-row gap-2 items-center">
-                <input
-                  type="text"
-                  placeholder={`Link ${index + 1}`}
-                  value={link}
-                  onChange={(e) => handleQuickLinkChange(index, e.target.value)}
-                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <div className="flex gap-1 mt-2 sm:mt-0">
-                  <button
-                    type="button"
-                    onClick={() => removeQuickLink(index)}
-                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
-                    disabled={quickLinks.length === 1}
-                  >
-                    -
-                  </button>
-                  <button
-                    type="button"
-                    onClick={addQuickLink}
-                    className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            ))}
           </section>
 
           {/* Contact Us Section */}

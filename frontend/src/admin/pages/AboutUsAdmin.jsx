@@ -16,6 +16,18 @@ export default function AboutAdmin() {
   const [businessHours, setBusinessHours] = useState([{ day: "", inTime: "", outTime: "" }]);
   const [social, setSocial] = useState({ facebook: "", twitter: "", instagram: "", youtube: "", linkedin: "" });
 
+  // 🆕 Contact Services
+  const [contactServices, setContactServices] = useState([{ service: "" }]);
+
+  const addService = () => setContactServices([...contactServices, { service: "" }]);
+  const removeService = (index) => {
+    if (contactServices.length > 1) {
+      const newServices = [...contactServices];
+      newServices.splice(index, 1);
+      setContactServices(newServices);
+    }
+  };
+
   // Core Values
   const addCoreValue = () => setCoreValues([...coreValues, { name: "", text: "" }]);
   const removeCoreValue = (index) => {
@@ -59,6 +71,7 @@ export default function AboutAdmin() {
       contact,
       businessHours,
       social,
+      contactServices, // 🆕 yeh bhi console me jayega
     });
     alert("Form submitted successfully!");
   };
@@ -184,7 +197,10 @@ export default function AboutAdmin() {
         <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
           <h2 className="text-xl sm:text-2xl font-semibold mb-4">Meet Our Team</h2>
           {teamMembers.map((member, index) => (
-            <div key={index} className="flex flex-col sm:flex-row gap-2 mb-3 items-center">
+            <div
+              key={index}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4"
+            >
               <input
                 type="text"
                 placeholder="Name"
@@ -194,7 +210,7 @@ export default function AboutAdmin() {
                   newTeam[index].name = e.target.value;
                   setTeamMembers(newTeam);
                 }}
-                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <input
                 type="text"
@@ -205,7 +221,7 @@ export default function AboutAdmin() {
                   newTeam[index].role = e.target.value;
                   setTeamMembers(newTeam);
                 }}
-                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <input
                 type="text"
@@ -216,7 +232,7 @@ export default function AboutAdmin() {
                   newTeam[index].img = e.target.value;
                   setTeamMembers(newTeam);
                 }}
-                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <input
                 type="text"
@@ -227,7 +243,7 @@ export default function AboutAdmin() {
                   newTeam[index].linkedin = e.target.value;
                   setTeamMembers(newTeam);
                 }}
-                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <input
                 type="text"
@@ -238,10 +254,11 @@ export default function AboutAdmin() {
                   newTeam[index].twitter = e.target.value;
                   setTeamMembers(newTeam);
                 }}
-                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
 
-              <div className="flex gap-1 mt-2 sm:mt-0">
+              {/* Action Buttons */}
+              <div className="flex gap-2 sm:col-span-2 lg:col-span-3">
                 {index === teamMembers.length - 1 && (
                   <button
                     type="button"
@@ -265,9 +282,49 @@ export default function AboutAdmin() {
           ))}
         </div>
 
-        {/* Contact Us */}
+        {/* Contact Services */}
         <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Contact Us</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Contact Services</h2>
+          {contactServices.map((item, index) => (
+            <div key={index} className="flex gap-2 items-center mb-3">
+              <input
+                type="text"
+                placeholder="Service Name"
+                value={item.service}
+                onChange={(e) => {
+                  const newServices = [...contactServices];
+                  newServices[index].service = e.target.value;
+                  setContactServices(newServices);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <div className="flex gap-1">
+                {index === contactServices.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={addService}
+                    className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  >
+                    +
+                  </button>
+                )}
+                {contactServices.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeService(index)}
+                    className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Contact Information */}
+        <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Contact Information</h2>
           <input
             type="text"
             placeholder="Mobile Number"

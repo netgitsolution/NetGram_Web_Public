@@ -15,7 +15,16 @@ export const PortfolioRequest = sequelize.define(
         },
         project: {
             type: DataTypes.JSONB
-        }
+        },
+        team_heading: {
+            type: DataTypes.STRING,
+        },
+        team_sub_heading: {
+            type: DataTypes.STRING,
+        },
+        team_role: {
+            type: DataTypes.JSONB
+        },
     }, {
     tableName: 'portfolio',
     timestamps: true,

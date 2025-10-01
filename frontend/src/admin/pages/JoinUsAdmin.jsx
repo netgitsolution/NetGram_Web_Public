@@ -8,17 +8,36 @@ export default function JoinUsAdmin() {
         name: "",
         email: "",
         phone: "",
-        role: "",
-        applyRole: "",
+        roles: [""],       // multiple roles
+        applyRoles: [""],  // multiple apply roles
         message: "",
         file: null,
     });
 
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
+    const handleChange = (e, index, field) => {
+        const { value } = e.target;
+        const updated = [...formData[field]];
+        updated[index] = value;
+
         setFormData({
             ...formData,
-            [name]: files ? files[0] : value,
+            [field]: updated,
+        });
+    };
+
+    const addField = (field) => {
+        setFormData({
+            ...formData,
+            [field]: [...formData[field], ""],
+        });
+    };
+
+    const removeField = (field, index) => {
+        const updated = [...formData[field]];
+        updated.splice(index, 1);
+        setFormData({
+            ...formData,
+            [field]: updated,
         });
     };
 
@@ -37,8 +56,8 @@ export default function JoinUsAdmin() {
             name: "",
             email: "",
             phone: "",
-            role: "",
-            applyRole: "",
+            roles: [""],
+            applyRoles: [""],
             message: "",
             file: null,
         });
@@ -92,120 +111,74 @@ export default function JoinUsAdmin() {
                         Opportunities & Apply Section
                     </h1>
 
+                    {/* Roles Section */}
                     <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Opportunities Heading
+                        <label className="block text-gray-700 font-semibold mb-2">
+                            Select Role(s)
                         </label>
-                        <input
-                            type="text"
-                            value={opportunityHeading}
-                            onChange={(e) => setOpportunityHeading(e.target.value)}
-                            placeholder="Enter Opportunities Heading"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        />
+                        {formData.roles.map((role, index) => (
+                            <div key={index} className="flex gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    value={role}
+                                    onChange={(e) => handleChange(e, index, "roles")}
+                                    placeholder="Enter role (e.g., Designer, Developer)"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => removeField("roles", index)}
+                                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                    disabled={formData.roles.length === 1}
+                                >
+                                    -
+                                </button>
+                                {index === formData.roles.length - 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => addField("roles")}
+                                        className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        +
+                                    </button>
+                                )}
+                            </div>
+                        ))}
                     </div>
 
+                    {/* Apply Roles Section */}
                     <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Your Name
+                        <label className="block text-gray-700 font-semibold mb-2">
+                            Apply Role(s)
                         </label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="Enter your name"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Your Email
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Enter your email"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Your Phone Number
-                        </label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="Enter your phone number"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Select Role
-                        </label>
-                        <input
-                            type="text"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleChange}
-                            placeholder="Enter role (e.g., Designer, Developer)"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Apply Role
-                        </label>
-                        <input
-                            type="text"
-                            name="applyRole"
-                            value={formData.applyRole}
-                            onChange={handleChange}
-                            placeholder="Enter role you want to apply for"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Additional Text / Message
-                        </label>
-                        <textarea
-                            name="message"
-                            value={formData.message}
-                            onChange={handleChange}
-                            placeholder="Enter your message"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            rows={4}
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Upload File (Resume / Portfolio)
-                        </label>
-                        <input
-                            type="file"
-                            name="file"
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
+                        {formData.applyRoles.map((applyRole, index) => (
+                            <div key={index} className="flex gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    value={applyRole}
+                                    onChange={(e) => handleChange(e, index, "applyRoles")}
+                                    placeholder="Enter role you want to apply for"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => removeField("applyRoles", index)}
+                                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                    disabled={formData.applyRoles.length === 1}
+                                >
+                                    -
+                                </button>
+                                {index === formData.applyRoles.length - 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => addField("applyRoles")}
+                                        className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        +
+                                    </button>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 

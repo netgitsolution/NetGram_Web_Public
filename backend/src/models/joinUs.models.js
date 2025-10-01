@@ -5,8 +5,7 @@ export const JoinUsRequest = sequelize.define(
     'JoinUsRequest',
     {
         heading: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.STRING
         },
         sub_heading: {
             type: DataTypes.TEXT,

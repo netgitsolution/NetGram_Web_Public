@@ -2,7 +2,7 @@ import { PortfolioRequest } from '../models/portfolio.model.js';
 
 export const updatePortfolioRequest = async (req, res) => {
     try {
-        const { id, heading, sub_heading, project_category, project_name, project_description, project_stack } = req.body;
+        const { id, heading, sub_heading, project_category, project, team_heading, team_sub_heading, team_role } = req.body;
 
         if (!id) {
             return res.status(400).json({ message: "id is required!" });
@@ -14,7 +14,7 @@ export const updatePortfolioRequest = async (req, res) => {
         }
 
         await PortfolioRequest.update(
-            { heading, sub_heading, project_category, project_name, project_description, project_stack },
+            { heading, sub_heading, project_category, project, team_heading, team_sub_heading, team_role },
             { where: { id } }
         );
 

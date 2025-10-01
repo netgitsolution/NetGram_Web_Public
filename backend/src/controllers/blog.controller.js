@@ -2,7 +2,7 @@ import { BlogRequest } from '../models/blog.model.js';
 
 export const updateBlogRequest = async (req, res) => {
     try {
-        const { id, heading, sub_heading, project_category } = req.body;
+        const { id, heading, sub_heading, project_category, project } = req.body;
 
         if (!id) {
             return res.status(400).json({ message: "id is required!" });
@@ -14,7 +14,7 @@ export const updateBlogRequest = async (req, res) => {
         }
 
         await BlogRequest.update(
-            { heading, sub_heading, project_category },
+            { heading, sub_heading, project_category, project },
             { where: { id } }
         );
 

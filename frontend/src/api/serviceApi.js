@@ -1,6 +1,6 @@
 import { api } from "./axiosHelper";
 
-export const submitPortfolioData = async (payload) => {
+export const submitServiceData = async (payload) => {
     try {
         const res = await api.post("/services/request", payload);
         return res.data;
@@ -10,7 +10,7 @@ export const submitPortfolioData = async (payload) => {
     }
 };
 
-export const getPortfolioData = async () => {
+export const getServiceData = async () => {
     try {
         const res = await api.get("/services/getData");
         return res.data;

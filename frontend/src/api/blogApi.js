@@ -2,19 +2,19 @@ import { api } from "./axiosHelper";
 
 export const submitPortfolioData = async (payload) => {
     try {
-        const res = await api.post("/services/request", payload);
+        const res = await api.post("/blog/request", payload);
         return res.data;
-    }
-    catch (err) {
+    } catch (err) {
         throw err.response?.data || err.message;
     }
 };
 
 export const getPortfolioData = async () => {
     try {
-        const res = await api.get("/services/getData");
+        const res = await api.get("/blog/getData");
         return res.data;
-    } catch (err) {
+    }
+    catch (err) {
         throw err.response?.data || err.message;
     }
 };

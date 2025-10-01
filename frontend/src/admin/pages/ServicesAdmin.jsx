@@ -4,29 +4,33 @@ export default function ServiceAdmin() {
     const [headingName, setHeadingName] = useState("");
     const [textName, setTextName] = useState("");
     const [cards, setCards] = useState([
-        { name: "", description: "", section: "" },
+        { name: "", description: "", sectionList: [], sectionString: "" },
     ]);
     const [flexibleData, setFlexibleData] = useState({
         heading: "",
         text: "",
     });
 
+    // Handle card field change
     const handleCardChange = (index, field, value) => {
         const updatedCards = [...cards];
         updatedCards[index][field] = value;
         setCards(updatedCards);
     };
 
+    // Add new card
     const addCard = () => {
-        setCards([...cards, { name: "", description: "", section: "" }]);
+        setCards([...cards, { name: "", description: "", sectionList: [], sectionString: "" }]);
     };
 
+    // Remove card
     const removeCard = (index) => {
         if (cards.length === 1) return; // Always keep at least 1 card
         const updatedCards = cards.filter((_, i) => i !== index);
         setCards(updatedCards);
     };
 
+    // Form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Service Heading:", { headingName, textName });
@@ -37,7 +41,7 @@ export default function ServiceAdmin() {
         // Reset fields
         setHeadingName("");
         setTextName("");
-        setCards([{ name: "", description: "", section: "" }]);
+        setCards([{ name: "", description: "", sectionList: [], sectionString: "" }]);
         setFlexibleData({ heading: "", text: "" });
     };
 
@@ -94,9 +98,7 @@ export default function ServiceAdmin() {
                             className="border border-gray-300 rounded-lg p-4 mb-4 relative"
                         >
                             <div className="flex justify-between items-center mb-2">
-                                <h2 className="font-semibold text-lg">
-                                    Card #{index + 1}
-                                </h2>
+                                <h2 className="font-semibold text-lg">Card #{index + 1}</h2>
                                 <div className="space-x-2">
                                     <button
                                         type="button"
@@ -117,6 +119,7 @@ export default function ServiceAdmin() {
                                 </div>
                             </div>
 
+                            {/* Card Name */}
                             <div className="mb-2">
                                 <label className="block text-gray-700 font-semibold mb-1">
                                     Service Card Name
@@ -133,6 +136,7 @@ export default function ServiceAdmin() {
                                 />
                             </div>
 
+                            {/* Card Description */}
                             <div className="mb-2">
                                 <label className="block text-gray-700 font-semibold mb-1">
                                     Service Description
@@ -149,19 +153,25 @@ export default function ServiceAdmin() {
                                 />
                             </div>
 
+                            {/* Service Section (Single Input for List Items) */}
                             <div>
                                 <label className="block text-gray-700 font-semibold mb-1">
-                                    Service Section
+                                    Service Section (comma separated)
                                 </label>
-                                <input
-                                    type="text"
-                                    value={card.section}
-                                    onChange={(e) =>
-                                        handleCardChange(index, "section", e.target.value)
-                                    }
-                                    placeholder="Enter Service Section"
+                                <textarea
+                                    value={card.sectionString || ""}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        const list = value
+                                            .split(",")
+                                            .map((i) => i.trim())
+                                            .filter((i) => i); // remove empty
+                                        handleCardChange(index, "sectionString", value);
+                                        handleCardChange(index, "sectionList", list);
+                                    }}
+                                    placeholder="Enter items separated by comma"
                                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    required
+                                    rows={3}
                                 />
                             </div>
                         </div>
@@ -170,7 +180,9 @@ export default function ServiceAdmin() {
 
                 {/* Section 3: Flexible Section */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
-                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Flexible Section</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+                        Flexible Section
+                    </h1>
 
                     <div>
                         <label className="block text-gray-700 font-semibold mb-1">

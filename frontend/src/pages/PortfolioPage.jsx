@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaUser, FaRegEnvelope, FaComment, FaPhone } from "react-icons/fa";
 import {
     FaLaptopCode,
     FaBullseye,
@@ -33,7 +34,13 @@ const sampleProjects = [
 const PortfolioPage = () => {
     const [selectedCategory, setSelectedCategory] = useState("All Projects");
     const [projects, setProjects] = useState([]);
-    const [formData, setFormData] = useState({ full_name: "", email: "", project_type: "Web Development", project_details: "" });
+    const [formData, setFormData] = useState({
+        full_name: "",
+        email: "",
+        phone: "",   // ✅ New phone field
+        project_type: "Web Development",
+        project_details: ""
+    });
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [selectedProjectType, setSelectedProjectType] = useState("Select  ");
     const [loading, setLoading] = useState(false);
@@ -57,7 +64,7 @@ const PortfolioPage = () => {
         try {
             const res = await submitProjectRequest(formData);
             setSuccessMsg(res.message || "Project request submitted successfully!");
-            setFormData({ full_name: "", email: "", project_type: "Web Development", project_details: "" });
+            setFormData({ full_name: "", email: "", phone: "", project_type: "Web Development", project_details: "" });
             setSelectedProjectType("Select  ");
         } catch (err) {
             setErrorMsg(err.message || "Failed to submit project request");
@@ -128,19 +135,55 @@ const PortfolioPage = () => {
                     {errorMsg && <p className="text-red-400 text-center mb-3">{errorMsg}</p>}
 
                     <form className="max-w-2xl mx-auto space-y-6 text-left" onSubmit={handleSubmit}>
-                        <div>
-                            <label className="block mb-1 font-medium text-gray-200">Full Name</label>
-                            <input type="text" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Enter your full name" className="w-full px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400" required />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 font-medium text-gray-200">Email Address</label>
-                            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" className="w-full px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400" required />
-                        </div>
-
+                        {/* Full Name */}
                         <div className="relative">
-                            <label className="block mb-1 font-medium text-gray-200">Project Type</label>
-                            <div className="w-full px-4 py-3 border rounded-lg flex justify-between items-center cursor-pointer hover:bg-white/5 transition bg-white/20 text-white" onClick={() => setDropdownOpen(!dropdownOpen)}>
+                            <FaUser className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
+                            <input
+                                type="text"
+                                name="full_name"
+                                value={formData.full_name}
+                                onChange={handleChange}
+                                placeholder="Enter your full name"
+                                required
+                                className="w-full pl-10 px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400"
+                            />
+                        </div>
+
+                        {/* Email */}
+                        <div className="relative">
+                            <FaRegEnvelope className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="Enter your email"
+                                required
+                                className="w-full pl-10 px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400"
+                            />
+                        </div>
+
+                        {/* Phone */}
+                        <div className="relative">
+                            <FaPhone className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
+                            <input
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                placeholder="Enter your phone number"
+                                required
+                                className="w-full pl-10 px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400"
+                            />
+                        </div>
+
+                        {/* Project Type Dropdown */}
+                        <div className="relative">
+                            <FaComment className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
+                            <div
+                                className="w-full pl-10 px-4 py-3 border rounded-lg flex justify-between items-center cursor-pointer hover:bg-white/5 transition bg-white/20 text-white"
+                                onClick={() => setDropdownOpen(!dropdownOpen)}
+                            >
                                 <span>{selectedProjectType}</span>
                                 <span>{dropdownOpen ? "▲" : "▼"}</span>
                             </div>
@@ -148,23 +191,48 @@ const PortfolioPage = () => {
                             {dropdownOpen && (
                                 <ul className="absolute w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto text-gray-800">
                                     {categories.filter(cat => cat !== "All Projects").map(cat => (
-                                        <li key={cat} className="px-4 py-2 cursor-pointer hover:bg-gray-100" onClick={() => { setSelectedProjectType(cat); setFormData(prev => ({ ...prev, project_type: cat })); setDropdownOpen(false); }}>{cat}</li>
+                                        <li
+                                            key={cat}
+                                            className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                            onClick={() => {
+                                                setSelectedProjectType(cat);
+                                                setFormData(prev => ({ ...prev, project_type: cat }));
+                                                setDropdownOpen(false);
+                                            }}
+                                        >
+                                            {cat}
+                                        </li>
                                     ))}
                                 </ul>
                             )}
                         </div>
 
-                        <div>
-                            <label className="block mb-1 font-medium text-gray-200">Project Details</label>
-                            <textarea rows="5" name="project_details" value={formData.project_details} onChange={handleChange} placeholder="Describe your project..." className="w-full px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400" required />
+                        {/* Project Details */}
+                        <div className="relative">
+                            <FaComment className="absolute top-2 left-3 text-gray-300" />
+                            <textarea
+                                rows="5"
+                                name="project_details"
+                                value={formData.project_details}
+                                onChange={handleChange}
+                                placeholder="Describe your project..."
+                                required
+                                className="w-full pl-10 px-4 py-3 rounded-lg outline-none bg-white/20 text-white border border-white/30 placeholder-gray-300 focus:ring-2 focus:ring-emerald-400"
+                            />
                         </div>
 
-                        <button type="submit" disabled={loading} className="w-full px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl shadow-md hover:bg-emerald-700 transition">
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl shadow-md hover:bg-emerald-700 transition"
+                        >
                             {loading ? "Submitting..." : "Submit Project Inquiry"}
                         </button>
                     </form>
                 </div>
             </section>
+
         </div>
     );
 };

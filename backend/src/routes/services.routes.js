@@ -1,9 +1,9 @@
 import express from 'express';
-import { updatePortfolioRequest, getPortfolioRequest } from '../controllers/portfolio.controller.js';
+import { updateServiceRequest, getServiceRequest } from '../controllers/service.controller.js';
 
 const router = express.Router();
 
-router.post('/request', updatePortfolioRequest);
-router.post('/getData', getPortfolioRequest);
+router.post('/request', updateServiceRequest);
+router.get('/getData', getServiceRequest);
 
 export default router;

@@ -8,8 +8,13 @@ export const JoinUsRequest = sequelize.define(
             type: DataTypes.STRING
         },
         sub_heading: {
-            type: DataTypes.TEXT,
-            allowNull: false,
+            type: DataTypes.STRING
+        },
+        Opportunities_heading: {
+            type: DataTypes.STRING
+        },
+        Opportunities_sub_heading: {
+            type: DataTypes.STRING
         },
         role: {
             type: DataTypes.ARRAY(DataTypes.STRING)
@@ -17,5 +22,9 @@ export const JoinUsRequest = sequelize.define(
         apply: {
             type: DataTypes.ARRAY(DataTypes.STRING)
         }
+    },
+    {
+        tableName: 'joinUsRequests',
+        timestamps: true
     }
 );

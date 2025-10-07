@@ -1,68 +1,110 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { submitJoinUsData, getJoinUsData } from "../../api/joinUsApi";
 
 export default function JoinUsAdmin() {
-    const [headingName, setHeadingName] = useState("");
-    const [textName, setTextName] = useState("");
-    const [opportunityHeading, setOpportunityHeading] = useState("");
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        roles: [""],       // multiple roles
-        applyRoles: [""],  // multiple apply roles
-        message: "",
-        file: null,
-    });
-
-    const handleChange = (e, index, field) => {
-        const { value } = e.target;
-        const updated = [...formData[field]];
-        updated[index] = value;
-
-        setFormData({
-            ...formData,
-            [field]: updated,
-        });
+    // ------------------- EMPTY FALLBACK -------------------
+    const emptyData = {
+        id: 1,
+        heading: "",
+        sub_heading: "",
+        Opportunities_heading: "",
+        Opportunities_sub_heading: "",
+        role: [""],
+        apply: [""],
     };
 
+    // ------------------- STATES -------------------
+    const [headingName, setHeadingName] = useState(emptyData.heading);
+    const [subHeading, setSubHeading] = useState(emptyData.sub_heading);
+    const [opportunitiesHeading, setOpportunitiesHeading] = useState(emptyData.Opportunities_heading);
+    const [opportunitiesSubHeading, setOpportunitiesSubHeading] = useState(emptyData.Opportunities_sub_heading);
+    const [roles, setRoles] = useState(emptyData.role);
+    const [applyRoles, setApplyRoles] = useState(emptyData.apply);
+
+    // ------------------- FETCH DATA ON MOUNT -------------------
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getJoinUsData(); // fetch from API
+                if (res && res.length > 0) {
+                    const data = res[0]; // assuming API returns array
+                    setHeadingName(data.heading || "");
+                    setSubHeading(data.sub_heading || "");
+                    setOpportunitiesHeading(data.Opportunities_heading || "");
+                    setOpportunitiesSubHeading(data.Opportunities_sub_heading || "");
+                    setRoles(data.role || [""]);
+                    setApplyRoles(data.apply || [""]);
+                }
+            } catch (error) {
+                console.error("Error fetching Join Us data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // ------------------- FORM SUBMIT -------------------
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            id: 1,
+            heading: headingName,
+            sub_heading: subHeading,
+            Opportunities_heading: opportunitiesHeading,
+            Opportunities_sub_heading: opportunitiesSubHeading,
+            role: roles,
+            apply: applyRoles,
+        };
+
+        try {
+            const res = await submitJoinUsData(payload);
+            alert(res.message || "Data submitted successfully!");
+
+            // update state with response
+            if (res.data) {
+                setHeadingName(res.data.heading || "");
+                setSubHeading(res.data.sub_heading || "");
+                setOpportunitiesHeading(res.data.Opportunities_heading || "");
+                setOpportunitiesSubHeading(res.data.Opportunities_sub_heading || "");
+                setRoles(res.data.role || [""]);
+                setApplyRoles(res.data.apply || [""]);
+            }
+        } catch (error) {
+            console.error("Error submitting Join Us data:", error);
+            alert(error.message || "Something went wrong!");
+        }
+    };
+
+    // ------------------- HANDLERS -------------------
     const addField = (field) => {
-        setFormData({
-            ...formData,
-            [field]: [...formData[field], ""],
-        });
+        if (field === "roles") setRoles([...roles, ""]);
+        else setApplyRoles([...applyRoles, ""]);
     };
 
     const removeField = (field, index) => {
-        const updated = [...formData[field]];
-        updated.splice(index, 1);
-        setFormData({
-            ...formData,
-            [field]: updated,
-        });
+        if (field === "roles") {
+            const newRoles = roles.filter((_, i) => i !== index);
+            setRoles(newRoles.length ? newRoles : [""]);
+        } else {
+            const newApplyRoles = applyRoles.filter((_, i) => i !== index);
+            setApplyRoles(newApplyRoles.length ? newApplyRoles : [""]);
+        }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Heading & Text:", { headingName, textName });
-        console.log("Opportunities Heading:", opportunityHeading);
-        console.log("Opportunities Form:", formData);
-        alert("Form submitted successfully!");
-
-        // Reset fields
-        setHeadingName("");
-        setTextName("");
-        setOpportunityHeading("");
-        setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            roles: [""],
-            applyRoles: [""],
-            message: "",
-            file: null,
-        });
+    const handleFieldChange = (field, index, value) => {
+        if (field === "roles") {
+            const updated = [...roles];
+            updated[index] = value;
+            setRoles(updated);
+        } else {
+            const updated = [...applyRoles];
+            updated[index] = value;
+            setApplyRoles(updated);
+        }
     };
 
+    // ------------------- JSX -------------------
     return (
         <div className="min-h-screen bg-gray-100 flex items-start justify-center p-4 sm:p-6 lg:p-10">
             <div className="w-full max-w-4xl space-y-6">
@@ -70,116 +112,114 @@ export default function JoinUsAdmin() {
                     Join Us Admin Panel
                 </h2>
 
-                {/* Section 1: Heading & Text */}
+                {/* Heading & Subheading */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
                     <h1 className="text-xl sm:text-2xl font-semibold mb-4">
-                        Heading & Text Section
+                        Heading & Subheading
                     </h1>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Heading Name
-                        </label>
-                        <input
-                            type="text"
-                            value={headingName}
-                            onChange={(e) => setHeadingName(e.target.value)}
-                            placeholder="Enter heading name"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-1">
-                            Text Name
-                        </label>
-                        <textarea
-                            value={textName}
-                            onChange={(e) => setTextName(e.target.value)}
-                            placeholder="Enter text"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            rows={3}
-                            required
-                        />
-                    </div>
+                    <input
+                        type="text"
+                        value={headingName}
+                        onChange={(e) => setHeadingName(e.target.value)}
+                        placeholder="Heading"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <textarea
+                        value={subHeading}
+                        onChange={(e) => setSubHeading(e.target.value)}
+                        placeholder="Subheading"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                    ></textarea>
                 </div>
 
-                {/* Section 2: Opportunities & Apply Form */}
+                {/* Opportunities Section */}
                 <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
                     <h1 className="text-xl sm:text-2xl font-semibold mb-4">
-                        Opportunities & Apply Section
+                        Opportunities
                     </h1>
+                    <input
+                        type="text"
+                        value={opportunitiesHeading}
+                        onChange={(e) => setOpportunitiesHeading(e.target.value)}
+                        placeholder="Opportunities Heading"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <textarea
+                        value={opportunitiesSubHeading}
+                        onChange={(e) => setOpportunitiesSubHeading(e.target.value)}
+                        placeholder="Opportunities Subheading"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        rows={3}
+                    ></textarea>
+                </div>
 
-                    {/* Roles Section */}
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-2">
-                            Select Role(s)
-                        </label>
-                        {formData.roles.map((role, index) => (
-                            <div key={index} className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    value={role}
-                                    onChange={(e) => handleChange(e, index, "roles")}
-                                    placeholder="Enter role (e.g., Designer, Developer)"
-                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                />
+                {/* Roles */}
+                <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Roles</h1>
+                    {roles.map((role, index) => (
+                        <div key={index} className="flex gap-2 mb-2">
+                            <input
+                                type="text"
+                                value={role}
+                                onChange={(e) => handleFieldChange("roles", index, e.target.value)}
+                                placeholder="Enter role"
+                                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeField("roles", index)}
+                                className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                disabled={roles.length === 1}
+                            >
+                                -
+                            </button>
+                            {index === roles.length - 1 && (
                                 <button
                                     type="button"
-                                    onClick={() => removeField("roles", index)}
-                                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                    disabled={formData.roles.length === 1}
+                                    onClick={() => addField("roles")}
+                                    className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                                 >
-                                    -
+                                    +
                                 </button>
-                                {index === formData.roles.length - 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={() => addField("roles")}
-                                        className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                    >
-                                        +
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
 
-                    {/* Apply Roles Section */}
-                    <div>
-                        <label className="block text-gray-700 font-semibold mb-2">
-                            Apply Role(s)
-                        </label>
-                        {formData.applyRoles.map((applyRole, index) => (
-                            <div key={index} className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    value={applyRole}
-                                    onChange={(e) => handleChange(e, index, "applyRoles")}
-                                    placeholder="Enter role you want to apply for"
-                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                />
+                {/* Apply Roles */}
+                <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4">
+                    <h1 className="text-xl sm:text-2xl font-semibold mb-4">Apply Roles</h1>
+                    {applyRoles.map((applyRole, index) => (
+                        <div key={index} className="flex gap-2 mb-2">
+                            <input
+                                type="text"
+                                value={applyRole}
+                                onChange={(e) =>
+                                    handleFieldChange("applyRoles", index, e.target.value)
+                                }
+                                placeholder="Enter apply role"
+                                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeField("applyRoles", index)}
+                                className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                disabled={applyRoles.length === 1}
+                            >
+                                -
+                            </button>
+                            {index === applyRoles.length - 1 && (
                                 <button
                                     type="button"
-                                    onClick={() => removeField("applyRoles", index)}
-                                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                    disabled={formData.applyRoles.length === 1}
+                                    onClick={() => addField("applyRoles")}
+                                    className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                                 >
-                                    -
+                                    +
                                 </button>
-                                {index === formData.applyRoles.length - 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={() => addField("applyRoles")}
-                                        className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                    >
-                                        +
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                            )}
+                        </div>
+                    ))}
                 </div>
 
                 {/* Submit Button */}

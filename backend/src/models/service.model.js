@@ -10,22 +10,19 @@ export const Service = sequelize.define(
         },
         sub_heading: {
             type: DataTypes.STRING,
-            allowNull: false,
         },
         service_card: {
             type: DataTypes.JSONB // Array of objects
         },
-        flexible_section: {
+        flexible_heading: {
             type: DataTypes.STRING,
-            allowNull: false,
         },
         flexible_text: {
-            type: DataTypes.TEXT,
-            allowNull: false,
+            type: DataTypes.STRING,
         }
     },
     {
-        tableName: "career_request",
+        tableName: "service_request",
         timestamps: true,
     }
 );

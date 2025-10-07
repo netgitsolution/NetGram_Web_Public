@@ -8,7 +8,8 @@ import {
     FaVideo,
 } from "react-icons/fa";
 import Dotted from "../components/Dotted";
-import { getProjects, submitProjectRequest } from "../api/projectApi";
+import { submitProjectRequest } from "../api/projectApi";
+import { getPortfolioData } from '../api/portfolioApi';
 
 const categories = [
     "All Projects",
@@ -20,36 +21,83 @@ const categories = [
     "Content Creation",
 ];
 
-// Sample projects
-const sampleProjects = [
-    { id: 1, title: "E-commerce Platform", description: "Custom e-commerce solution with advanced features", category: "Web Development", icon: <FaLaptopCode size={40} className="text-emerald-500" /> },
-    { id: 2, title: "Digital Marketing Campaign", description: "Comprehensive marketing strategy resulting in 300% lead increase", category: "Digital Marketing", icon: <FaChartLine size={40} className="text-emerald-500" /> },
-    { id: 3, title: "Brand Identity Design", description: "Complete brand redesign and visual identity system", category: "Branding", icon: <FaPaintBrush size={40} className="text-emerald-500" /> },
-    { id: 4, title: "Corporate Website", description: "Responsive corporate website with CMS integration", category: "Web Development", icon: <FaLaptopCode size={40} className="text-emerald-500" /> },
-    { id: 5, title: "Social Media Strategy", description: "Social media management increasing engagement by 250%", category: "Social Media", icon: <FaBullseye size={40} className="text-emerald-500" /> },
-    { id: 6, title: "Video Production", description: "Professional video content for marketing campaigns", category: "Video", icon: <FaVideo size={40} className="text-emerald-500" /> },
-    { id: 7, title: "Content Creation", description: "High-quality content generation for blogs, social media, and campaigns", category: "Content Creation", icon: <FaBullseye size={40} className="text-emerald-500" /> },
-];
-
 const PortfolioPage = () => {
+    const emptyData = {
+        id: 1,
+        heading: "",
+        sub_heading: "",
+        project_category: ["All Projects"],
+        project: [
+            { id: 0, project_name: "", project_description: "", project_stack: "", project_category_name: "All Projects" }
+        ],
+        team_heading: "",
+        team_sub_heading: "",
+        team_role: [{ role_name: "" }],
+    };
+
+    const [heading, setHeading] = useState(emptyData.heading);
+    const [subHeading, setSubHeading] = useState(emptyData.sub_heading);
+    const [projects, setProjects] = useState(emptyData.project);
+    const [teamHeading, setTeamHeading] = useState(emptyData.team_heading);
+    const [teamSubHeading, setTeamSubHeading] = useState(emptyData.team_sub_heading);
+    const [teamRoles, setTeamRoles] = useState(emptyData.team_role);
+
     const [selectedCategory, setSelectedCategory] = useState("All Projects");
-    const [projects, setProjects] = useState([]);
     const [formData, setFormData] = useState({
         full_name: "",
         email: "",
         phone_number: "",
-        project_type: "Web Development",
+        project_type: "",
         project_details: ""
     });
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [selectedProjectType, setSelectedProjectType] = useState("Select  ");
+    const [selectedProjectType, setSelectedProjectType] = useState("Select Role");
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
-        setProjects(sampleProjects);
+        const fetchData = async () => {
+            try {
+                const res = await getPortfolioData();
+                if (res && res.length > 0) {
+                    const data = res[0];
+
+                    setHeading(data.heading || "");
+                    setSubHeading(data.sub_heading || "");
+                    setTeamHeading(data.team_heading || "");
+                    setTeamSubHeading(data.team_sub_heading || "");
+                    setTeamRoles(data.team_role || [{ role_name: "" }]);
+
+                    setProjects(
+                        data.project?.map((p, index) => ({
+                            id: p.id ?? index,
+                            title: p.project_name || "",
+                            description: p.project_description || "",
+                            category: p.project_category_name || "All Projects",
+                            icon: getProjectIcon(p.project_category_name),
+                        })) || []
+                    );
+                }
+            } catch (err) {
+                console.error("Error fetching portfolio data:", err);
+            }
+        };
+
+        fetchData();
     }, []);
+
+    const getProjectIcon = (category) => {
+        switch (category) {
+            case "Web Development": return <FaLaptopCode size={40} className="text-emerald-500" />;
+            case "Digital Marketing": return <FaChartLine size={40} className="text-emerald-500" />;
+            case "Branding": return <FaPaintBrush size={40} className="text-emerald-500" />;
+            case "Social Media": return <FaBullseye size={40} className="text-emerald-500" />;
+            case "Video": return <FaVideo size={40} className="text-emerald-500" />;
+            case "Content Creation": return <FaBullseye size={40} className="text-emerald-500" />;
+            default: return <FaLaptopCode size={40} className="text-emerald-500" />;
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -64,8 +112,8 @@ const PortfolioPage = () => {
         try {
             const res = await submitProjectRequest(formData);
             setSuccessMsg(res.message || "Project request submitted successfully!");
-            setFormData({ full_name: "", email: "", phone: "", project_type: "Web Development", project_details: "" });
-            setSelectedProjectType("Select  ");
+            setFormData({ full_name: "", email: "", phone_number: "", project_type: "", project_details: "" });
+            setSelectedProjectType("Select Role");
         } catch (err) {
             setErrorMsg(err.message || "Failed to submit project request");
         } finally {
@@ -84,10 +132,8 @@ const PortfolioPage = () => {
             {/* Hero Section */}
             <section className="text-center py-20">
                 <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-lg p-10">
-                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Our Portfolio</h1>
-                    <p className="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto">
-                        Showcasing our expertise through successful client projects
-                    </p>
+                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4">{heading}</h1>
+                    <p className="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto">{subHeading}</p>
                 </div>
             </section>
 
@@ -110,9 +156,9 @@ const PortfolioPage = () => {
 
             {/* Projects Grid */}
             <section className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                {filteredProjects.map((project) => (
+                {filteredProjects.map((project, index) => (
                     <div
-                        key={project.id}
+                        key={`${project.id}-${index}`}
                         className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg transform transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl"
                     >
                         <div className="mb-4">{project.icon}</div>
@@ -126,10 +172,8 @@ const PortfolioPage = () => {
             {/* CTA Section with Form */}
             <section className="text-center py-10">
                 <div className="max-w-2xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-lg p-10">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-2">Ready to Discuss Your Project?</h2>
-                    <p className="mb-6 text-lg md:text-xl max-w-2xl mx-auto text-gray-200">
-                        Let's discuss how we can help transform your digital presence
-                    </p>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-2">{teamHeading || "Ready to Discuss Your Project?"}</h2>
+                    <p className="mb-6 text-lg md:text-xl max-w-2xl mx-auto text-gray-200">{teamSubHeading || "Let's discuss how we can help transform your digital presence"}</p>
 
                     {successMsg && <p className="text-green-400 text-center mb-3">{successMsg}</p>}
                     {errorMsg && <p className="text-red-400 text-center mb-3">{errorMsg}</p>}
@@ -177,7 +221,7 @@ const PortfolioPage = () => {
                             />
                         </div>
 
-                        {/* Project Type Dropdown */}
+                        {/* Role Dropdown */}
                         <div className="relative">
                             <FaComment className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
                             <div
@@ -190,17 +234,17 @@ const PortfolioPage = () => {
 
                             {dropdownOpen && (
                                 <ul className="absolute w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto text-gray-800">
-                                    {categories.filter(cat => cat !== "All Projects").map(cat => (
+                                    {teamRoles.map((role, idx) => (
                                         <li
-                                            key={cat}
+                                            key={idx}
                                             className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                                             onClick={() => {
-                                                setSelectedProjectType(cat);
-                                                setFormData(prev => ({ ...prev, project_type: cat }));
+                                                setSelectedProjectType(role.role_name);
+                                                setFormData(prev => ({ ...prev, project_type: role.role_name }));
                                                 setDropdownOpen(false);
                                             }}
                                         >
-                                            {cat}
+                                            {role.role_name}
                                         </li>
                                     ))}
                                 </ul>
@@ -232,7 +276,6 @@ const PortfolioPage = () => {
                     </form>
                 </div>
             </section>
-
         </div>
     );
 };

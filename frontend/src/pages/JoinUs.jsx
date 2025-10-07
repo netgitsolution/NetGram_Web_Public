@@ -1,23 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser, FaRegEnvelope, FaComment, FaPhone } from "react-icons/fa";
 import Dotted from "../components/Dotted";
 import { submitCareerForm } from "../api/careerApi";
+import { getJoinUsData } from "../api/joinUsApi";
 
-const servicesData = [
-    { title: "Digital Media Marketing" },
-    { title: "Script & Content Writing" },
-    { title: "Web Development" },
-    { title: "Content Creation" },
-    { title: "Training Services" },
-];
+const JoinUs = () => {
+    const [joinContent, setJoinContent] = useState({
+        heading: "",
+        sub_heading: "",
+        Opportunities_heading: "",
+        Opportunities_sub_heading: "",
+        role: [],
+        apply: [],
+    });
 
-const joinData = [
-    { title: "Trainee" },
-    { title: "Intern" },
-    { title: "Vacancy" },
-];
-
-const Career = () => {
     const [formData, setFormData] = useState({
         your_name: "",
         your_email: "",
@@ -34,6 +30,22 @@ const Career = () => {
 
     const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
     const [joinDropdownOpen, setJoinDropdownOpen] = useState(false);
+
+    // ------------------- FETCH JOIN US DATA -------------------
+    useEffect(() => {
+        const fetchJoinData = async () => {
+            try {
+                const res = await getJoinUsData();
+                if (res && res.length > 0) {
+                    // assuming API returns an array, take first element
+                    setJoinContent(res[0]);
+                }
+            } catch (err) {
+                console.error("Failed to fetch join us data:", err);
+            }
+        };
+        fetchJoinData();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -91,21 +103,20 @@ const Career = () => {
                 {/* Hero Section */}
                 <section className="text-center mb-12">
                     <h1 className="text-5xl font-extrabold mb-4 drop-shadow-lg">
-                        We Are Hiring!
+                        {joinContent.heading || "We Are Hiring!"}
                     </h1>
                     <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
-                        Join our dynamic team and help us shape the future of digital
-                        transformation. Explore exciting opportunities with us.
+                        {joinContent.sub_heading || "Join our dynamic team and help us shape the future of digital transformation."}
                     </p>
                 </section>
 
                 {/* Form Section */}
                 <div className="backdrop-blur-lg bg-white/10 border border-white/20 p-8 rounded-2xl shadow-2xl max-w-2xl w-full">
                     <h2 className="text-4xl font-extrabold mb-2 text-center">
-                        Opportunities
+                        {joinContent.Opportunities_heading}
                     </h2>
                     <p className="text-center text-gray-300 mb-5">
-                        Fill the form below and upload your CV to apply.
+                        {joinContent.Opportunities_sub_heading}
                     </p>
 
                     {successMsg && (
@@ -153,16 +164,16 @@ const Career = () => {
                             </div>
                             {roleDropdownOpen && (
                                 <ul className="absolute w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto text-gray-800">
-                                    {servicesData.map((service) => (
+                                    {(joinContent.role.length ? joinContent.role : []).map((service, index) => (
                                         <li
-                                            key={service.title}
+                                            key={index}
                                             className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                                             onClick={() => {
-                                                setFormData((prev) => ({ ...prev, select_role: service.title }));
+                                                setFormData((prev) => ({ ...prev, select_role: service }));
                                                 setRoleDropdownOpen(false);
                                             }}
                                         >
-                                            {service.title}
+                                            {service}
                                         </li>
                                     ))}
                                 </ul>
@@ -181,16 +192,16 @@ const Career = () => {
                             </div>
                             {joinDropdownOpen && (
                                 <ul className="absolute w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-60 overflow-y-auto text-gray-800">
-                                    {joinData.map((join) => (
+                                    {(joinContent.apply.length ? joinContent.apply : []).map((join, index) => (
                                         <li
-                                            key={join.title}
+                                            key={index}
                                             className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                                             onClick={() => {
-                                                setFormData((prev) => ({ ...prev, join_as: join.title }));
+                                                setFormData((prev) => ({ ...prev, join_as: join }));
                                                 setJoinDropdownOpen(false);
                                             }}
                                         >
-                                            {join.title}
+                                            {join}
                                         </li>
                                     ))}
                                 </ul>
@@ -240,4 +251,4 @@ const Career = () => {
     );
 };
 
-export default Career;
+export default JoinUs;

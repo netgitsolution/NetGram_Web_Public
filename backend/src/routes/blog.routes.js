@@ -3,7 +3,7 @@ import { updateBlogRequest, getBlogRequest } from '../controllers/blog.controlle
 
 const router = express.Router();
 
-router.post('/blog', updateBlogRequest);
+router.post('/request', updateBlogRequest);
 router.get('/getData', getBlogRequest);
 
 export default router;  

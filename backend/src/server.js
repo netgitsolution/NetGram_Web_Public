@@ -16,12 +16,14 @@ import careerRoutes from "./routes/career.routes.js";
 
 // Page routes
 import homeRoutes from "./routes/home.routes.js";
+import loginRoutes from "./routes/login.routes.js";
 import portfolioRoutes from "./routes/portfolio.routes.js";
 import servicesRoutes from "./routes/services.routes.js";
 import joinUsRoutes from "./routes/joinUs.routes.js";
 import aboutRoutes from "./routes/about.routes.js";
 import blogRoutes from "./routes/blog.routes.js";
 import footerRoutes from "./routes/footer.routes.js";
+import teamRoutes from "./routes/team.routes.js";
 
 const app = express();
 
@@ -35,6 +37,9 @@ app.use(cors({
   credentials: true,
 }));
 app.use("/uploads", express.static("uploads"));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 
 // API Routes
 app.use("/api/projects", projectRoutes);
@@ -43,12 +48,14 @@ app.use("/api/career", careerRoutes);
 
 // Admin Page routes
 app.use("/api/home", homeRoutes);
+app.use("/api/login", loginRoutes);
 app.use("/api/portfolio", portfolioRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/api/joinUs", joinUsRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/footer", footerRoutes);
+app.use("/api/team", teamRoutes);
 
 console.log('Before static middleware:', listEndpoints(app));
 // SPA routing MUST come before static so rewritten URLs get served

@@ -9,7 +9,7 @@ export const submitAboutData = async (payload) => {
     }
 };
 
-export const getAbout = async () => {
+export const getAboutData = async () => {
     try {
         const res = await api.get("/about/getData");
         return res.data;

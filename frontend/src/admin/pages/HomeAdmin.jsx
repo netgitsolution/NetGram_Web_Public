@@ -61,9 +61,8 @@ export default function HomeAdmin() {
         try {
             const res = await submitHomeData(payload);
             alert(res.message);
-            console.log("Updated Data:", res.data);
 
-            // ✅ updated data ko state me set karna
+            // updated data ko state me set karna
             if (res.data) {
                 setServices(res.data.service_heading || [""]);
                 setHeadingName(res.data.hero_heading || "");

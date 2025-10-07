@@ -19,6 +19,7 @@ import JoinUsAdmin from "./pages/JoinUsAdmin";
 import AboutUsAdmin from "./pages/AboutUsAdmin";
 import FooterAdmin from "./pages/FooterAdmin";
 import BlogAdmin from "./pages/BlogAdmin";
+import TeamAdmin from "./pages/TeamAdmin";
 
 export default function AdminLayout({ onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -36,9 +37,10 @@ export default function AdminLayout({ onLogout }) {
     { label: "Portfolio", icon: <Briefcase size={20} /> },
     { label: "Services", icon: <Wrench size={20} /> },
     { label: "Join Us", icon: <Users size={20} /> },
+    { label: "Team", icon: <Users size={20} /> }, // 👈 Added Team
     { label: "About", icon: <Info size={20} /> },
     { label: "Blog", icon: <Layout size={20} /> },
-    { label: "Footer", icon: <Columns size={20} /> }
+    { label: "Footer", icon: <Columns size={20} /> },
   ];
 
   return (
@@ -137,15 +139,12 @@ export default function AdminLayout({ onLogout }) {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
         <header className="w-full bg-white shadow p-4 flex items-center md:hidden fixed top-0 left-0 right-0 z-40">
-          {/* Sidebar Toggle Button */}
           <button
             className="p-2 hover:bg-gray-200 rounded-md"
             onClick={() => setMobileSidebarOpen(true)}
           >
             <Menu size={20} />
           </button>
-
-          {/* Dashboard Title */}
           <h1 className="absolute left-1/2 -translate-x-1/2 text-lg font-semibold">
             Dashboard
           </h1>
@@ -153,11 +152,11 @@ export default function AdminLayout({ onLogout }) {
 
         {/* Content Area */}
         <main className="flex-1 p-4 md:p-6 overflow-auto mt-14 md:mt-0">
-          {activeSection === "Navbar" && <NavbarAdmin />}
           {activeSection === "Home" && <HomeAdmin />}
           {activeSection === "Portfolio" && <PortfolioAdmin />}
           {activeSection === "Services" && <ServicesAdmin />}
           {activeSection === "Join Us" && <JoinUsAdmin />}
+          {activeSection === "Team" && <TeamAdmin />} {/* 👈 Added */}
           {activeSection === "About" && <AboutUsAdmin />}
           {activeSection === "Blog" && <BlogAdmin />}
           {activeSection === "Footer" && <FooterAdmin />}

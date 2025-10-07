@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Dotted from "../components/Dotted";
 import {
     FaBullseye,
@@ -20,12 +20,33 @@ import {
     FaLaptopCode,
     FaPaintBrush,
     FaGraduationCap,
-    FaChevronLeft,
-    FaChevronRight,
 } from "react-icons/fa";
 import { sendContactRequest } from "../api/contactApi";
+import { getAboutData } from "../api/aboutApi";
+import MeetOurTeam from "../components/MeetOurTeam";
 
 const AboutPage = () => {
+    const emptyData = {
+        id: 1,
+        heading: [""],
+        sub_heading: "",
+        story_heading: "",
+        story_description: "",
+        mission_heading: "",
+        mission_description: "",
+        core_values: [{ name: "", text: "" }],
+        contact_heading: "",
+        contact_sub_heading: "",
+        contact_service_role: [{ service: "" }],
+        mobile_number: "",
+        email: "",
+        address: "",
+        business_hours: [{ day: "", inTime: "", outTime: "" }],
+        social_media: { twitter: "", instagram: "", youtube: "", linkedin: "" },
+    };
+
+    // ------------------- STATES -------------------
+    const [aboutData, setAboutData] = useState(emptyData);
     const [formData, setFormData] = useState({ name: "", email: "", number: "", message: "" });
     const [selectedService, setSelectedService] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -34,6 +55,40 @@ const AboutPage = () => {
     const [errorMsg, setErrorMsg] = useState("");
     const teamRef = useRef(null);
 
+    // ------------------- FETCH ABOUT DATA -------------------
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getAboutData();
+                if (res && res.length > 0) {
+                    const data = res[0];
+                    setAboutData({
+                        id: data.id || 1,
+                        heading: data.heading?.length ? data.heading : [""],
+                        sub_heading: data.sub_heading || "",
+                        story_heading: data.story_heading || "",
+                        story_description: data.story_description || "",
+                        mission_heading: data.mission_heading || "",
+                        mission_description: data.mission_description || "",
+                        core_values: data.core_values?.length ? data.core_values : [{ name: "", text: "" }],
+                        contact_heading: data.contact_heading || "",
+                        contact_sub_heading: data.contact_sub_heading || "",
+                        contact_service_role: data.contact_service_role?.length ? data.contact_service_role : [{ service: "" }],
+                        mobile_number: data.mobile_number || "",
+                        email: data.email || "",
+                        address: data.address || "",
+                        business_hours: data.business_hours?.length ? data.business_hours : [{ day: "", inTime: "", outTime: "" }],
+                        social_media: data.social_media || { twitter: "", instagram: "", youtube: "", linkedin: "" },
+                    });
+                }
+            } catch (err) {
+                console.error("Error fetching About data:", err);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // ------------------- FORM HANDLERS -------------------
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -66,49 +121,29 @@ const AboutPage = () => {
         }
     };
 
-    const coreValues = [
-        { icon: <FaBullseye />, title: "Excellence", desc: "Delivering world-class IT solutions with precision." },
-        { icon: <FaHandshake />, title: "Partnership", desc: "We collaborate with clients as trusted partners." },
-        { icon: <FaRocket />, title: "Innovation", desc: "We innovate with modern technologies to stay ahead." },
-        { icon: <FaLock />, title: "Integrity", desc: "Transparency and trust form the core of our work." },
-    ];
+    // ------------------- STATIC VALUES -------------------
+    const coreValues = aboutData.core_values.length
+        ? aboutData.core_values
+        : [
+            { icon: <FaBullseye />, title: "Excellence", desc: "Delivering world-class IT solutions with precision." },
+            { icon: <FaHandshake />, title: "Partnership", desc: "We collaborate with clients as trusted partners." },
+            { icon: <FaRocket />, title: "Innovation", desc: "We innovate with modern technologies to stay ahead." },
+            { icon: <FaLock />, title: "Integrity", desc: "Transparency and trust form the core of our work." },
+        ];
 
-    const services = [
-        { label: "Digital Media Marketing", icon: <FaChartLine /> },
-        { label: "Script & Content Writing", icon: <FaPenNib /> },
-        { label: "Web Development", icon: <FaLaptopCode /> },
-        { label: "Content Creation", icon: <FaPaintBrush /> },
-        { label: "Training Services", icon: <FaGraduationCap /> },
-    ];
-
-    const teamMembers = [
-        { name: "John Doe", role: "CEO & Founder", img: "https://randomuser.me/api/portraits/men/32.jpg", linkedin: "#", twitter: "#" },
-        { name: "Jane Smith", role: "Head of Marketing", img: "https://randomuser.me/api/portraits/women/44.jpg", linkedin: "#", twitter: "#" },
-        { name: "Mike Johnson", role: "Lead Developer", img: "https://randomuser.me/api/portraits/men/56.jpg", linkedin: "#", twitter: "#" },
-        { name: "Alice Brown", role: "UI/UX Designer", img: "https://randomuser.me/api/portraits/women/65.jpg", linkedin: "#", twitter: "#" },
-        { name: "Bob White", role: "Marketing Analyst", img: "https://randomuser.me/api/portraits/men/72.jpg", linkedin: "#", twitter: "#" },
-    ];
+    const services = aboutData.contact_service_role.length
+        ? aboutData.contact_service_role.map((s) => ({ label: s.service }))
+        : [
+            { label: "Digital Media Marketing" },
+            { label: "Script & Content Writing" },
+            { label: "Web Development" },
+            { label: "Content Creation" },
+            { label: "Training Services" },
+        ];
 
     const scrollToContact = () => {
         document.getElementById("contact-section").scrollIntoView({ behavior: "smooth" });
     };
-
-    const scrollTeam = (direction) => {
-        if (teamRef.current) {
-            // 3 card width scroll karne ke liye
-            const card = teamRef.current.querySelector("div"); // first card
-            if (!card) return;
-
-            const cardWidth = card.offsetWidth + parseInt(getComputedStyle(card).marginRight); // width + gap
-            const scrollAmount = cardWidth * 1; // scroll 3 cards at a time
-
-            teamRef.current.scrollBy({
-                left: direction === "left" ? -scrollAmount : scrollAmount,
-                behavior: "smooth",
-            });
-        }
-    };
-
 
     return (
         <div className="relative bg-gray-50 min-h-screen overflow-hidden">
@@ -118,10 +153,8 @@ const AboutPage = () => {
             <section className="relative py-28 text-white flex justify-center items-center">
                 <div className="max-w-7xl mx-auto px-6 w-full flex justify-center relative z-10">
                     <div className="bg-white/10 backdrop-blur-md border border-white/30 rounded-3xl p-12 text-center shadow-lg">
-                        <h1 className="text-5xl font-extrabold mb-4">NetGram IT Solutions</h1>
-                        <p className="text-gray-200 text-xl max-w-3xl mx-auto mb-8">
-                            Bridging the gap between traditional businesses and modern digital transformation.
-                        </p>
+                        <h1 className="text-5xl font-extrabold mb-4">{aboutData.heading[0]}</h1>
+                        <p className="text-gray-200 text-xl max-w-3xl mx-auto mb-8">{aboutData.sub_heading}</p>
                         <div className="flex justify-center">
                             <button
                                 onClick={scrollToContact}
@@ -138,15 +171,10 @@ const AboutPage = () => {
             <section className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="bg-white/10 backdrop-blur-md border border-white/30 p-8 rounded-2xl shadow-lg space-y-6">
                     <h2 className="text-3xl font-bold text-gray-100">Our Story</h2>
-                    <p className="text-gray-200">
-                        Founded with a vision to transform businesses with IT solutions,
-                        NetGram provides services in web development, marketing, and digital growth.
-                    </p>
+                    <p className="text-gray-200">{aboutData.story_description}</p>
 
                     <h2 className="text-3xl font-bold text-gray-100 mt-6">Our Mission</h2>
-                    <p className="text-gray-200">
-                        To deliver cutting-edge IT services that empower businesses globally.
-                    </p>
+                    <p className="text-gray-200">{aboutData.mission_description}</p>
                 </div>
 
                 <div className="bg-white/10 backdrop-blur-md border border-white/30 p-8 rounded-2xl shadow-lg">
@@ -156,8 +184,8 @@ const AboutPage = () => {
                             <li key={i} className="flex items-start gap-3">
                                 <div className="text-emerald-400 text-xl mt-1">{val.icon}</div>
                                 <div>
-                                    <h3 className="font-semibold text-gray-100">{val.title}</h3>
-                                    <p className="text-gray-200">{val.desc}</p>
+                                    <h3 className="font-semibold text-gray-100">{val.name || val.title}</h3>
+                                    <p className="text-gray-200">{val.text || val.desc}</p>
                                 </div>
                             </li>
                         ))}
@@ -165,62 +193,16 @@ const AboutPage = () => {
                 </div>
             </section>
 
-            {/* Meet Our Team */}
-            <section className="relative z-10 max-w-7xl mx-auto px-6 py-20">
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-100">Meet Our Team</h1>
-                    <p className="text-gray-300 mt-4 max-w-2xl mx-auto">
-                        Our dedicated professionals are here to help your business grow.
-                    </p>
-                </div>
-
-                <div className="relative">
-                    {/* Scroll Buttons */}
-                    <button
-                        onClick={() => scrollTeam("left")}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/40 transition hidden md:flex"
-                    >
-                        <FaChevronLeft size={20} className="text-white" />
-                    </button>
-                    <button
-                        onClick={() => scrollTeam("right")}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/40 transition hidden md:flex"
-                    >
-                        <FaChevronRight size={20} className="text-white" />
-                    </button>
-
-                    {/* Team Carousel */}
-                    <div ref={teamRef} className="flex gap-6 overflow-x-auto scroll-smooth px-2 md:px-6 scrollbar-hide">
-                        {teamMembers.map((member) => (
-                            <div
-                                key={member.name}
-                                className="flex-shrink-0 w-[90%] sm:w-[45%] md:w-[30%] bg-white/10 backdrop-blur-md border border-white/30 p-6 rounded-2xl shadow-lg text-center"
-                            >
-                                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4">
-                                    <img src={member.img} alt={member.name} className="w-full h-full object-cover" />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-100">{member.name}</h3>
-                                <p className="text-gray-400 mb-4">{member.role}</p>
-                                <div className="flex justify-center gap-4 text-gray-200">
-                                    <a href={member.linkedin} className="hover:text-emerald-400 transition transform hover:scale-110">
-                                        <FaLinkedin size={20} />
-                                    </a>
-                                    <a href={member.twitter} className="hover:text-emerald-400 transition transform hover:scale-110">
-                                        <FaTwitter size={20} />
-                                    </a>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <div>
+                <MeetOurTeam />
+            </div>
 
             {/* Contact Section */}
             <section id="contact-section" className="relative z-10 max-w-7xl mx-auto px-6 py-20">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-100">Contact Us</h1>
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-100">{aboutData.contact_heading}</h1>
                     <p className="text-gray-300 mt-4 max-w-2xl mx-auto">
-                        Have questions or want to work with us? Fill out the form or reach us directly.
+                        {aboutData.contact_sub_heading}
                     </p>
                 </div>
 
@@ -232,7 +214,6 @@ const AboutPage = () => {
                         {errorMsg && <p className="text-red-400 text-center mb-3">{errorMsg}</p>}
 
                         <form className="space-y-4" onSubmit={handleSubmit}>
-                            {/* Name */}
                             <div className="relative">
                                 <FaUser className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-300" />
                                 <input
@@ -334,31 +315,19 @@ const AboutPage = () => {
                     <div className="space-y-8">
                         {/* Contact Info */}
                         <div className="bg-white/10 backdrop-blur-md border border-white/30 p-6 sm:p-8 rounded-2xl shadow-lg">
-                            <h2 className="text-2xl font-bold mb-6 text-gray-100">Contact Information</h2>
+                            <h2 className="text-2xl font-bold mb-6 text-gray-100">{aboutData.contact_heading || "Contact Information"}</h2>
                             <ul className="space-y-4 text-gray-200">
-                                <li>
-                                    <a
-                                        href="tel:+912913160994"
-                                        className="flex items-center gap-3 text-gray-200 hover:text-emerald-400 transition"
-                                    >
-                                        <FaPhoneAlt className="text-emerald-400 flex-shrink-0" />
-                                        <span className="truncate">+91 2913160994</span>
-                                    </a>
+                                <li className="flex items-center gap-3">
+                                    <FaPhoneAlt className="text-emerald-400 flex-shrink-0" />
+                                    <span className="truncate">{aboutData.mobile_number || "+91 2913160994"}</span>
                                 </li>
-                                <li>
-                                    <a
-                                        href="mailto:netgitsolution@gmail.com"
-                                        className="flex items-center gap-3 text-gray-200 hover:text-emerald-400 transition"
-                                    >
-                                        <FaEnvelope className="text-emerald-400 flex-shrink-0" />
-                                        <span className="truncate">NETGITSOLUTION@gmail.com</span>
-                                    </a>
+                                <li className="flex items-center gap-3">
+                                    <FaEnvelope className="text-emerald-400 flex-shrink-0" />
+                                    <span className="truncate">{aboutData.email || "NETGITSOLUTION@gmail.com"}</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <FaMapMarkerAlt className="text-emerald-400 flex-shrink-0" />
-                                    <span className="truncate">
-                                        304, Modi Arcade, Jodhpur, Rajasthan, India
-                                    </span>
+                                    <span className="truncate">{aboutData.address || "304, Modi Arcade, Jodhpur, Rajasthan, India"}</span>
                                 </li>
                             </ul>
                         </div>
@@ -367,9 +336,11 @@ const AboutPage = () => {
                         <div className="bg-white/10 backdrop-blur-md border border-white/30 p-6 sm:p-8 rounded-2xl shadow-lg">
                             <h2 className="text-2xl font-bold mb-6 text-gray-100">Business Hours</h2>
                             <ul className="space-y-2 text-gray-200">
-                                <li>Mon - Fri: 9:00 AM - 6:00 PM</li>
-                                <li>Saturday: 10:00 AM - 4:00 PM</li>
-                                <li>Sunday: Closed</li>
+                                {aboutData.business_hours.map((bh, idx) => (
+                                    <li key={idx}>
+                                        {bh.day}: {bh.inTime} - {bh.outTime}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
@@ -377,16 +348,16 @@ const AboutPage = () => {
                         <div className="bg-white/10 backdrop-blur-md border border-white/30 p-6 sm:p-8 rounded-2xl shadow-lg">
                             <h2 className="text-2xl font-bold mb-6 text-gray-100">Follow Us</h2>
                             <div className="flex gap-6 text-gray-200">
-                                <a href="#" className="hover:text-emerald-400 transition transform hover:scale-110">
+                                <a href={aboutData.social_media.linkedin || "#"} className="hover:text-emerald-400 transition transform hover:scale-110">
                                     <FaLinkedin size={24} />
                                 </a>
-                                <a href="#" className="hover:text-emerald-400 transition transform hover:scale-110">
+                                <a href={aboutData.social_media.twitter || "#"} className="hover:text-emerald-400 transition transform hover:scale-110">
                                     <FaTwitter size={24} />
                                 </a>
-                                <a href="#" className="hover:text-emerald-400 transition transform hover:scale-110">
+                                <a href={aboutData.social_media.youtube || "#"} className="hover:text-emerald-400 transition transform hover:scale-110">
                                     <FaYoutube size={24} />
                                 </a>
-                                <a href="#" className="hover:text-emerald-400 transition transform hover:scale-110">
+                                <a href={aboutData.social_media.instagram || "#"} className="hover:text-emerald-400 transition transform hover:scale-110">
                                     <FaInstagram size={24} />
                                 </a>
                             </div>

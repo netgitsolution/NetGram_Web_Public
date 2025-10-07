@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 
 export default function BlogAdmin() {
+
+    const emptyData = {
+        id: 1,
+        heading: "",
+        sub_heading: "",
+        project_category: [""],
+        project: [{ project_name: "", name: "", author: "", date: "", summary: "", image: "" }],
+    };
+
     const [headingName, setHeadingName] = useState("");
     const [textName, setTextName] = useState("");
 
     // Categories
     const [categories, setCategories] = useState([
-        "All",
         "AI",
         "Marketing",
         "How to",

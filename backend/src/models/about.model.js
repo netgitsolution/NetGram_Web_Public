@@ -6,7 +6,6 @@ export const About = sequelize.define(
     {
         heading: {
             type: DataTypes.STRING,
-            unique: true // Make heading unique so upsert works
         },
         sub_heading: {
             type: DataTypes.STRING
@@ -24,13 +23,16 @@ export const About = sequelize.define(
             type: DataTypes.STRING
         },
         core_values: {
-            type: DataTypes.ARRAY(DataTypes.STRING) // Array of strings
+            type: DataTypes.JSONB
         },
-        meet_our_team: {
-            type: DataTypes.JSONB // Array of objects
+        contact_heading: {
+            type: DataTypes.STRING
         },
-        contact_service: {
-            type: DataTypes.ARRAY(DataTypes.STRING)
+        contact_sub_heading: {
+            type: DataTypes.STRING
+        },
+        contact_service_role: {
+            type: DataTypes.JSONB
         },
         mobile_number: {
             type: DataTypes.STRING
@@ -42,10 +44,10 @@ export const About = sequelize.define(
             type: DataTypes.STRING
         },
         business_hours: {
-            type: DataTypes.ARRAY(DataTypes.STRING) // Array of strings
+            type: DataTypes.JSONB
         },
         social_media: {
-            type: DataTypes.JSONB // Array of objects
+            type: DataTypes.JSONB
         },
     },
     {

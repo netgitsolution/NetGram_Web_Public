@@ -18,7 +18,7 @@ import HomePage from "./pages/Home";
 import PortfolioPage from "./pages/PortfolioPage";
 import ServicesPage from "./pages/Services";
 import AboutPage from "./pages/About";
-import Career from "./pages/Career";
+import JoinUs from "./pages/JoinUs";
 import Blog from "./pages/Blog";
 
 // Admin Pages
@@ -49,7 +49,7 @@ const AppWrapper = ({ isLoggedIn, handleLogin, handleLogout }) => {
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/careers" element={<Career />} />
+        <Route path="/joinUs" element={<JoinUs />} />
         <Route path="/blog" element={<Blog />} />
 
         {/* Admin Login */}

@@ -4,20 +4,20 @@ import { sequelize } from "../config/db.config.js";
 export const CareerRequest = sequelize.define(
     "CareerRequest",
     {
-        your_name: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        your_email: {
+        email: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { isEmail: true },
         },
-        your_number: {
+        number: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        select_role: {
+        role: {
             type: DataTypes.STRING(100),
             allowNull: false,
             defaultValue: "Not Specified",
@@ -27,7 +27,7 @@ export const CareerRequest = sequelize.define(
             allowNull: false,
             defaultValue: "Not Specified",
         },
-        your_message: {
+        message: {
             type: DataTypes.TEXT,
             allowNull: true,
         },

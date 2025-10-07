@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getTeamData, addTeamMember, deleteTeamMember } from "../../api/teamApi";
+import { submitTeamData, deleteTeamMember } from "../../api/teamApi";
 
 export default function TeamAdmin() {
     const emptyMember = {

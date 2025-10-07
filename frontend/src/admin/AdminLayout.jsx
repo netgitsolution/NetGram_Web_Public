@@ -19,7 +19,7 @@ import JoinUsAdmin from "./pages/JoinUsAdmin";
 import AboutUsAdmin from "./pages/AboutUsAdmin";
 import FooterAdmin from "./pages/FooterAdmin";
 import BlogAdmin from "./pages/BlogAdmin";
-import TeamAdmin from "./pages/TeamAdmin";
+// import TeamAdmin from "./pages/TeamAdmin";
 
 export default function AdminLayout({ onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -156,7 +156,7 @@ export default function AdminLayout({ onLogout }) {
           {activeSection === "Portfolio" && <PortfolioAdmin />}
           {activeSection === "Services" && <ServicesAdmin />}
           {activeSection === "Join Us" && <JoinUsAdmin />}
-          {activeSection === "Team" && <TeamAdmin />} {/* 👈 Added */}
+          {/* {activeSection === "Team" && <TeamAdmin />}  */}
           {activeSection === "About" && <AboutUsAdmin />}
           {activeSection === "Blog" && <BlogAdmin />}
           {activeSection === "Footer" && <FooterAdmin />}

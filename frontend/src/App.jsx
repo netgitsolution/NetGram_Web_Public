@@ -53,7 +53,7 @@ const AppWrapper = ({ isLoggedIn, handleLogin, handleLogout }) => {
         <Route path="/blog" element={<Blog />} />
 
         {/* Admin Login */}
-        <Route path="/adminLogin" element={<LoginAdmin onLogin={handleLogin} />} />
+        <Route path="/NetGramOffice" element={<LoginAdmin onLogin={handleLogin} />} />
 
         {/* Protected Admin Dashboard */}
         <Route

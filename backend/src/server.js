@@ -33,9 +33,10 @@ const __dirname = path.resolve();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL,
   credentials: true,
 }));
+
 app.use("/uploads", express.static("uploads"));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
@@ -56,6 +57,13 @@ app.use("/api/about", aboutRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/footer", footerRoutes);
 app.use("/api/team", teamRoutes);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+  });
+}
 
 console.log('Before static middleware:', listEndpoints(app));
 // SPA routing MUST come before static so rewritten URLs get served

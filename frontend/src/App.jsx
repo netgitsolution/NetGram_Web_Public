@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useState } from "react";
 import {
   BrowserRouter as Router,
@@ -22,8 +21,8 @@ import JoinUs from "./pages/JoinUs";
 import Blog from "./pages/Blog";
 
 // Admin Pages
-import AdminLayout from "./admin/AdminLayout";
 import LoginAdmin from "./admin/pages/LoginAdmin";
+import AdminLayout from "./admin/AdminLayout";
 
 // 🔹 Wrapper for Navbar & Footer Visibility
 const AppWrapper = ({ isLoggedIn, handleLogin, handleLogout }) => {
@@ -53,7 +52,7 @@ const AppWrapper = ({ isLoggedIn, handleLogin, handleLogout }) => {
         <Route path="/blog" element={<Blog />} />
 
         {/* Admin Login */}
-        <Route path="/NetGramOffice" element={<LoginAdmin onLogin={handleLogin} />} />
+        <Route path="/adminLogin" element={<LoginAdmin onLogin={handleLogin} />} />
 
         {/* Protected Admin Dashboard */}
         <Route

@@ -25,10 +25,9 @@ import blogRoutes from "./routes/blog.routes.js";
 import footerRoutes from "./routes/footer.routes.js";
 import teamRoutes from "./routes/team.routes.js";
 
-const app = express();
-
 const __dirname = path.resolve();
-
+const app = express();
+const staticPath = path.join(__dirname, "../frontend/dist");
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -38,8 +37,9 @@ app.use(cors({
 }));
 
 app.use("/uploads", express.static("uploads"));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(history({ index: '/index.html' }));
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ limit: '20mb', extended: true }));
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 
 // API Routes
@@ -59,9 +59,12 @@ app.use("/api/footer", footerRoutes);
 app.use("/api/team", teamRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+  const distPath = path.join(__dirname, '../frontend/dist');
+  app.use(express.static(distPath));
+
+  // Serve index.html for all other routes
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
   });
 }
 

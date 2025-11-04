@@ -91,7 +91,7 @@ function App() {
     if (username === "admin" && password === "1234") {
       setIsLoggedIn(true);
     } else {
-      alert("❌ Invalid credentials");
+      alert("Invalid credentials");
     }
   };
 

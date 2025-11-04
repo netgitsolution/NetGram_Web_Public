@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { submitTeamData, deleteTeamMember } from "../../api/teamApi";
+import { getTeamData, deleteTeamMember } from "../../api/teamApi";
 
 export default function TeamAdmin() {
     const emptyMember = {
@@ -83,7 +83,7 @@ export default function TeamAdmin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await submitTeamData(team);
+            const res = awai(team);
             alert(res.message || "Team saved successfully!");
             // Reset file fields after submit
             setTeam(res.data.map(m => ({ ...m, file: null })));

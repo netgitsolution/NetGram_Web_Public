@@ -15,7 +15,7 @@ export const Service = sequelize.define(
         service_card: {
             type: DataTypes.JSONB // Array of objects
         },
-        flexible_section: {
+        flexible_heading: {
             type: DataTypes.STRING,
             allowNull: false,
         },

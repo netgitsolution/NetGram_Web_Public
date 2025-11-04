@@ -25,7 +25,6 @@ export default function HomeAdmin() {
 
                 if (res && res.length > 0) {
                     const data = res[0]; // assuming API returns array
-
                     setServices(data.service_heading || [""]);
                     setHeadingName(data.hero_heading || "");
                     setTextName(data.hero_text || "");

@@ -1,6 +1,6 @@
 import { JoinUsRequest } from "../models/joinUs.models.js";
 
-// ----------------- UPDATE JOIN US -----------------
+// ----------------- CREATE OR UPDATE JOIN US -----------------
 export const updateJoinUsRequest = async (req, res) => {
     try {
         const { id, heading, sub_heading, role, apply } = req.body;
@@ -9,32 +9,26 @@ export const updateJoinUsRequest = async (req, res) => {
             return res.status(400).json({ message: "id is required!" });
         }
 
-        // Check if record exists
-        const existingJoinUs = await JoinUsRequest.findByPk(id);
-
-        if (!existingJoinUs) {
-            return res.status(404).json({ message: "No matching Join Us Request found to update." });
-        }
-
-        // Update the record
-        await JoinUsRequest.update(
-            { heading, sub_heading, role, apply },
-            { where: { id } }
-        );
-
-        // Fetch updated record
-        const updatedJoinUs = await JoinUsRequest.findByPk(id);
-
-        return res.status(200).json({
-            message: "Join Us request updated successfully!",
-            data: updatedJoinUs
+        // Sequelize upsert (create if not exist, else update)
+        const [joinUsData, created] = await JoinUsRequest.upsert({
+            id,
+            heading,
+            sub_heading,
+            role,
+            apply,
         });
 
+        return res.status(200).json({
+            message: created
+                ? "Join Us request created successfully!"
+                : "Join Us request updated successfully!",
+            data: joinUsData,
+        });
     } catch (error) {
-        console.error("Error updating Join Us Request:", error);
+        console.error("Error in updateJoinUsRequest:", error);
         return res.status(500).json({
-            message: "Something went wrong!",
-            error: error.message
+            message: "Internal server error",
+            error: error.message,
         });
     }
 };
@@ -48,7 +42,7 @@ export const getJoinUsRequest = async (req, res) => {
         console.error("Error fetching Join Us Requests:", error);
         return res.status(500).json({
             message: "Something went wrong getJoinUsRequest!",
-            error: error.message
+            error: error.message,
         });
     }
 };

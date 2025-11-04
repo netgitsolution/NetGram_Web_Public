@@ -72,7 +72,7 @@ if (process.env.NODE_ENV === 'production') {
 console.log('Before static middleware:', listEndpoints(app));
 // SPA routing MUST come before static so rewritten URLs get served
 app.use(history({ index: '/index.html' }));
-console.log('After history middleware:', listEndpoints(app));
+// console.log('After history middleware:', listEndpoints(app));
 
 // Static assets for frontend
 app.use(express.static(path.join(__dirname, "../frontend/dist")));

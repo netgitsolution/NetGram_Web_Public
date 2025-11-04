@@ -1,45 +1,46 @@
 import { Service } from "../models/service.model.js";
 
-// Update Service Request
+// ----------------- CREATE or UPDATE SERVICE -----------------
 export const updateServiceRequest = async (req, res) => {
     try {
-        const { id, heading, sub_heading, service_card, flexible_section, flexible_text } = req.body;
+        const {
+            id,
+            heading,
+            sub_heading,
+            service_card,
+            flexible_heading,
+            flexible_text
+        } = req.body;
 
-        if (!id) {
-            return res.status(400).json({ message: "id is required!" });
-        }
+        if (!id) return res.status(400).json({ message: "id is required!" });
 
-        // Check if the record exists
-        const existingService = await Service.findByPk(id);
-
-        if (!existingService) {
-            return res.status(404).json({ message: "No matching Service Request found to update." });
-        }
-
-        // Update the record
-        await Service.update(
-            { heading, sub_heading, service_card, flexible_section, flexible_text },
-            { where: { id } }
-        );
-
-        // Fetch updated record
-        const updatedService = await Service.findByPk(id);
+        // Sequelize upsert — create if not exists, update if exists
+        const [serviceData, created] = await Service.upsert({
+            id,
+            heading,
+            sub_heading,
+            service_card,
+            flexible_heading,  // ✅ changed from flexible_section
+            flexible_text
+        });
 
         return res.status(200).json({
-            message: "Service request updated successfully!",
-            data: updatedService
+            message: created
+                ? "Service request created successfully!"
+                : "Service request updated successfully!",
+            data: serviceData,
         });
 
     } catch (error) {
-        console.error("Error updating Service Request:", error);
+        console.error("Error in updateServiceRequest:", error);
         return res.status(500).json({
-            message: "Something went wrong updateServiceRequest!",
-            error: error.message
+            message: "Internal server error",
+            error: error.message,
         });
     }
 };
 
-// Get all Service Requests
+// ----------------- GET SERVICE -----------------
 export const getServiceRequest = async (req, res) => {
     try {
         const serviceRequests = await Service.findAll();
@@ -47,8 +48,8 @@ export const getServiceRequest = async (req, res) => {
     } catch (error) {
         console.error("Error fetching Service Requests:", error);
         return res.status(500).json({
-            message: "Something went wrong getServiceRequest!",
-            error: error.message
+            message: "Something went wrong in getServiceRequest!",
+            error: error.message,
         });
     }
 };

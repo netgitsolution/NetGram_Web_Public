@@ -1,6 +1,6 @@
 import { Footer } from '../models/footer.model.js';
 
-// ----------------- UPDATE FOOTER -----------------
+// ----------------- CREATE OR UPDATE FOOTER -----------------
 export const updateFooterRequest = async (req, res) => {
     try {
         const { id, heading_text, phone_number, email, address } = req.body;
@@ -9,32 +9,26 @@ export const updateFooterRequest = async (req, res) => {
             return res.status(400).json({ message: "id is required!" });
         }
 
-        // Check if record exists
-        const existingFooter = await Footer.findByPk(id);
-
-        if (!existingFooter) {
-            return res.status(404).json({ message: "No matching Footer Request found to update." });
-        }
-
-        // Update the record
-        await Footer.update(
-            { heading_text, phone_number, email, address },
-            { where: { id } }
-        );
-
-        // Fetch updated record
-        const updatedFooter = await Footer.findByPk(id);
-
-        return res.status(200).json({
-            message: "Footer request updated successfully!",
-            data: updatedFooter
+        // Sequelize upsert (create if not exist, else update)
+        const [footerData, created] = await Footer.upsert({
+            id,
+            heading_text,
+            phone_number,
+            email,
+            address,
         });
 
+        return res.status(200).json({
+            message: created
+                ? "Footer request created successfully!"
+                : "Footer request updated successfully!",
+            data: footerData,
+        });
     } catch (error) {
-        console.error("Error updating Footer Request:", error);
+        console.error("Error in updateFooterRequest:", error);
         return res.status(500).json({
-            message: "Something went wrong!",
-            error: error.message
+            message: "Internal server error",
+            error: error.message,
         });
     }
 };
@@ -48,7 +42,7 @@ export const getFooterRequest = async (req, res) => {
         console.error("Error fetching Footer Requests:", error);
         return res.status(500).json({
             message: "Something went wrong getFooterRequest!",
-            error: error.message
+            error: error.message,
         });
     }
 };

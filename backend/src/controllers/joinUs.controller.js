@@ -1,9 +1,9 @@
-import { JoinUsRequest } from "../models/joinUs.models.js";
+import { JoinUsRequest } from "../models/joinus.model.js";
 
 // ----------------- UPDATE JOIN US -----------------
 export const updateJoinUsRequest = async (req, res) => {
     try {
-        const { id, heading, sub_heading, Opportunities_heading, Opportunities_sub_heading, role, apply } = req.body;
+        const { id, heading, sub_heading, role, apply } = req.body;
 
         if (!id) {
             return res.status(400).json({ message: "id is required!" });
@@ -18,7 +18,7 @@ export const updateJoinUsRequest = async (req, res) => {
 
         // Update the record
         await JoinUsRequest.update(
-            { heading, sub_heading, Opportunities_heading, Opportunities_sub_heading, role, apply },
+            { heading, sub_heading, role, apply },
             { where: { id } }
         );
 

@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
-import { connectDB } from "./config/db.config.js";
+import { checkDbConnection, syncDatabase } from "./config/db.config.js";
+
 import history from 'connect-history-api-fallback';
 import listEndpoints from 'express-list-endpoints';
 
@@ -89,7 +90,17 @@ app._router?.stack?.forEach((middleware, index) => {
 const PORT = process.env.PORT || 3000;
 
 // Start Server
-await connectDB();
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await checkDbConnection();
+    await syncDatabase();
+
+    app.listen(PORT, () => {
+      console.log(`Server running at ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err.message);
+    process.exit(1);
+  }
+};
+startServer();

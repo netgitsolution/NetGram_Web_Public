@@ -1,4 +1,4 @@
-import { JoinUsRequest } from "../models/joinus.model.js";
+import { JoinUsRequest } from "../models/joinUs.models.js";
 
 // ----------------- UPDATE JOIN US -----------------
 export const updateJoinUsRequest = async (req, res) => {

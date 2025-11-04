@@ -1,16 +1,16 @@
 import { Team } from "../models/team.model.js";
 
-// ------------------ GET all team members ------------------
+//  GET all team data
 export const getTeamRequest = async (req, res) => {
     try {
-        const team = await Team.find(); // ✅ Mongoose uses .find()
+        const team = await Team.findAll();
         res.status(200).json(team);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching team data", error: error.message });
+        res.status(500).json({ message: "Error fetching team data", error });
     }
 };
 
-// ------------------ POST - Add new team member ------------------
+//  POST - Add new team member
 export const createTeamRequest = async (req, res) => {
     try {
         const { name, role, linkedin, twitter } = req.body;
@@ -20,7 +20,7 @@ export const createTeamRequest = async (req, res) => {
             return res.status(400).json({ message: "Name and role are required" });
         }
 
-        const newMember = new Team({
+        const newMember = await Team.create({
             name,
             role,
             img,
@@ -28,26 +28,24 @@ export const createTeamRequest = async (req, res) => {
             twitter,
         });
 
-        await newMember.save(); // ✅ Mongoose .save()
         res.status(201).json({ message: "Team member created successfully", data: newMember });
     } catch (error) {
-        res.status(500).json({ message: "Error creating team member", error: error.message });
+        res.status(500).json({ message: "Error creating team member", error });
     }
 };
 
-// ------------------ PUT - Update existing team member ------------------
+//  PUT - Update existing team member
 export const updateTeamRequest = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, role, linkedin, twitter } = req.body;
         const img = req.file ? req.file.filename : null;
 
-        const teamMember = await Team.findById(id); // ✅ Mongoose .findById()
+        const teamMember = await Team.findByPk(id);
         if (!teamMember) {
             return res.status(404).json({ message: "Team member not found" });
         }
 
-        // Update fields
         teamMember.name = name ?? teamMember.name;
         teamMember.role = role ?? teamMember.role;
         teamMember.linkedin = linkedin ?? teamMember.linkedin;
@@ -57,23 +55,23 @@ export const updateTeamRequest = async (req, res) => {
         await teamMember.save();
         res.status(200).json({ message: "Team member updated successfully", data: teamMember });
     } catch (error) {
-        res.status(500).json({ message: "Error updating team member", error: error.message });
+        res.status(500).json({ message: "Error updating team member", error });
     }
 };
 
-// ------------------ DELETE - Remove team member ------------------
+//  DELETE - Remove team member
 export const deleteTeamRequest = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const teamMember = await Team.findById(id); // ✅ Mongoose .findById()
+        const teamMember = await Team.findByPk(id);
         if (!teamMember) {
             return res.status(404).json({ message: "Team member not found" });
         }
 
-        await Team.findByIdAndDelete(id); // ✅ Mongoose delete
+        await teamMember.destroy();
         res.status(200).json({ message: "Team member deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error deleting team member", error: error.message });
+        res.status(500).json({ message: "Error deleting team member", error });
     }
 };
